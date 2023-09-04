@@ -1,0 +1,244 @@
+
+<div *ngIf="loading" class="position-absolute z-3 justify-content-center align-items-center"  [style.width.px]="getWidth" [style.height.px]="getHeight" style="--bs-bg-opacity: .2; background-color: rgba(var(--bs-dark-rgb), var(--bs-bg-opacity)) !important;">
+	<div class="d-flex justify-content-center align-items-center" style="width: 100%; height: 100%;">
+		<div class="d-block justify-content-center align-items-center">
+			<div class="spinner-grow text-success" role="status">
+				<span class="visually-hidden">Loading...</span>
+			</div>
+		</div>
+	</div>
+</div>
+
+	<div class="toast-container position-fixed bottom-0 end-0 p-3">
+		<div id="toasError" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+		<div class="toast-header bg-danger">
+			<strong class="me-auto text-white">Error</strong>
+			<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+		</div>
+		<div class="toast-body bg-danger text-white">
+			Documento no encontrado, verifique los datos ingresado.
+		</div>
+		</div>
+  	</div>
+
+	<div class="toast-container position-fixed bottom-0 end-0 p-3">
+		<div id="toasExito" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+		<div class="toast-header bg-success">
+			<strong class="me-auto text-white">Verificado</strong>
+			<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+		</div>
+		<div class="toast-body bg-success text-white">
+			Documento encontrado.
+		</div>
+		</div>
+	</div>
+
+<div>
+
+	<div style="margin-bottom: 2rem;" class="cf-0">  
+		<div class="container px-2 cuadro-cabecera">
+			<div class="">
+				<div class="col-md-12 col-xs-12 titulo1">MESA DE PARTE VIRTUAL</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="d-flex justify-content-center mt-3 mb-3"  data-bs-stepper #stepper>
+		<div class="example-button-row">
+			<div class="example-flex-container">
+				<button  mat-mini-fab
+				class="bg-gradient" style="background-color: #0D625E;" (click)="backBtn()">
+					<div class="justify-content-center align-items-center d-flex" >
+						<i class="fa-solid fa-arrow-left fa-xl" style="color:#fff;"></i>
+					</div>
+				</button>
+			</div>
+		</div>
+  	</div>
+
+	<div class="container cuadro-blanco" style="padding-left: 0px!important; padding-right: 0px!important;">
+	<!--<div class=""><h4 class="titulo-11 py-2 text-center">Consultar expediente</h4></div>-->
+
+		<div class="">
+			<div class="">
+				<form novalidate [formGroup]="formGroupConsul" autocomplete="off" (ngSubmit)="buscarExp(form0.value)" #form0="ngForm"  class="">
+					<div class="row mr-3 ml-3">
+						<div class="col-md-3 pb-3">
+							<div class="" style="margin-left: 0px!important; margin-right: 0px!important;">
+								<span class="subtitulo">Año</span>
+								<select name="year" id="year"  formControlName="year"  class="custom-select col-md-12" (change)="tipoYear($event)" ngModel required>
+									<option value="">[SELECCIONE]</option>
+									<option *ngFor="let doc of selectTipoYear;" [value]="doc['year']">{{doc['year']}}</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-md-3 pb-3">
+							<div class="" style="margin-left: 0px!important; margin-right: 0px!important;">
+								<span class="subtitulo">Nro expediente </span>
+								<div class="input-group">
+									<input name="nroExpediente" formControlName="nroExpediente"  placeholder="Digite su expediente" id="nroExpediente" type="text" class="form-control border" ngModel required (ngModelChange)="changeExp($event)" maxlength="10">
+									<button class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04" (click)="helpExp()"><i class="fa-solid fa-circle-info"></i></button>
+								</div>
+								<span class="pl-2 text-danger" *ngIf="errorLength!==null">Debe ser 6 digitos</span>
+							</div>
+						</div>
+						<div class="col-md-3 pb-3">
+							<div  class="" style="margin-left: 0px!important; margin-right: 0px!important;">
+								<span class="subtitulo">Clave web</span>
+								<input name="claveWeb" formControlName="claveWeb"  placeholder="Digite su clave web" id="claveWeb" type="text" class="form-control border" ngModel required (input)="inputClaveWeb($event)" maxlength="10">
+							</div>						
+						</div>
+						<div class="col-md-3  pb-3 d-flex justify-content-center align-items-end">
+							<div  class="" style="margin-left: 0px!important; margin-right: 0px!important;">
+								<div class="row " style="margin-left: 0px!important; margin-right: 0px!important;">
+									<button class="btn btn-success" type="submit" [disabled]="!form0.valid">Ingresar</button>
+									<!-- <button class="btn btn-success" type="button" (click)="btn1()">prueba</button> -->
+								</div>
+							</div>
+						</div>
+
+
+					</div>
+
+
+
+					<!-- <pre>
+						{{form0.value | json}}
+						{{form0.valid | json}}
+					</pre> -->
+
+				</form>
+			</div>
+		</div>		
+	</div>
+
+	<!-- <div>
+		<button (click)="getNroDias()">sss</button>
+		<p>{{this.getNroDias()}}</p>
+	</div> -->
+
+	<div *ngIf="listExpediente.length!==0" class="container cuadro-blanco" style="padding-left: 0px!important; padding-right: 0px!important;">
+		<!--<div class=""><h4 class="titulo-11 py-2 text-center">Consultar expediente</h4></div>-->
+
+		<div *ngIf="listExpediente.length!==0" class="mt-5  ml-3 mr-3">
+			<div class="d-flex justify-content-around">
+				<div class="">
+					<img src="../../../../assets/img/logo-sin-letras.png" alt="" style="height: 5rem; width: 5rem;">
+				</div>
+				<div class=" d-flex justify-content-center align-items-center">
+					<h1 class="fw-bold">HOJA DE RUTA</h1>
+				</div>
+				<div class="">
+					<h4 class="fw-bold"> Nº Expediente</h4>
+					<h4 class="fw-bold">{{this.listExpediente[0]['EXPEDIENTE']}}</h4>
+				</div>
+			</div>
+			<div class="pb-2 pt-4">
+				<table class="table table-borderless">
+					<tbody>
+						<tr>
+							<td>Documento:</td>
+							<td>EXPEDIENTE-{{this.listExpediente[0]['NRO_DOCUMENTO']}}</td>
+						</tr>
+						<tr>
+							<td>Remitente:</td>
+							<td>{{this.listExpediente[0]['REMITENTE']}}</td>
+						</tr>
+						<tr>
+							<td>Fecha de Recepción:</td>
+							<td>{{this.getFecha(this.listExpediente[0]['FEC_RECEPCION'])}}</td>
+						</tr>
+						<tr>
+							<td>Descripcion:</td>
+							<td>{{this.listExpediente[0]['ASUNTO']}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+		</div>
+
+
+
+		<div  *ngIf="listExpediente.length!==0" class="d-flex container justify-content-center align-items-center">
+			<div class="table-responsive">
+				<table class="table table-bordered table-sm">
+					<thead class="table-secondary">
+						<tr>
+							<th scope="col text-center">Nº</th>
+							<th scope="col text-center">Desde</th>
+							<th scope="col text-center">Hacia</th>
+							<th scope="col text-center">Dias en la Oficina</th>
+							<th scope="col text-center">Estado</th>
+							<th scope="col text-center">Fecha Derivación</th>
+							<th scope="col text-center">Fecha Recepción</th>
+							<th scope="col text-center">Doc. Adjuntado</th>
+							<th scope="col text-center">Obs. Al enviar</th>
+							<th scope="col text-center">Obs. Al archivar</th>
+							<th scope="col text-center">Ubicación</th>
+						</tr>
+					</thead>
+					<tbody class="table-group-divider">
+						<tr *ngFor="let item of listExpediente; let index = index">
+							<td>{{(index+1).toString().length==1?'00':'0'}}{{index+1}}</td>
+							<td>{{item['DESDE']}}</td>
+							<td>{{item['HACIA']}}</td>
+							<td>{{this.getNroDias(item['FEC_DERIVACION'],item['FEC_RECIBIDO'])}}</td>
+							<td>{{item['ESTADO']}}</td>
+							<td>{{this.getFecha(item['FEC_DERIVACION'])}}</td>
+							<td>{{this.getFecha(item['FEC_RECIBIDO'])}}</td>
+							<td>{{item['DOCUMENTO_ADJUNTADO']}}</td>
+							<td>{{item['OBSERVACIONES_AL_ENVIAR']}}</td>
+							<td>{{item['OBSERVACIONES_AL_ARCHIVAR']}}</td>
+							<td>{{item['UBICACION_ARCHIVO']}}</td>
+						</tr>					
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<div class="pb-4 pt-4">
+
+	</div>
+
+
+
+
+
+
+
+
+
+	<div id="myModal" class="modal" tabindex="-1" role="dialog" style="--bs-bg-opacity: .4;background-color: rgba(var(--bs-dark-rgb), var(--bs-bg-opacity)) !important;">
+		<div class="modal-dialog modal-dialog-centered" >
+			<div class="modal-content" >
+				<!-- <div id="pdfhtml"> -->
+					<div class="mx-3 mt-2" style="height: 2rem;">
+						<!-- <span style="font-weight: bold; font-size: x-large;">Documento</span> -->
+
+						<button class="close rounded" (click)="closeModal()" style="color: #000; height: 100%;">
+							<i class="fa-solid fa-xmark"></i>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="">
+							<div class="d-flex justify-content-center align-items-center">
+								<img src="../../../../assets/img/help-exp.png" alt="">
+							</div><br/>
+							<h4 class="text-center">{{ 'Este es su numero de expediente' | uppercase}}</h4>
+							<div class="text-center">
+								<span class="">{{ 'En la parte del cuadro de datos esta su numero de expediente.'}}</span><br/><br/>
+								<span class="">{{ 'Si el numero tiene guiones(-), solo ingrese el numero que esta dentro del los guiones.'}}</span><br/><br/>
+							</div>
+							<h4 class="text-center bold">{{ 'Número de expediente es 004462' | uppercase}} <i class="fa-solid fa-check" style="color: #1A984D;"></i></h4>
+						</div>									
+					</div>
+
+			</div>
+		</div>
+	</div>
+
+</div>
+
+

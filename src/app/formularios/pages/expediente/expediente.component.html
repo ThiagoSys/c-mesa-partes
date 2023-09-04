@@ -1,0 +1,454 @@
+
+<div  id="myModalLoading" class="modal" tabindex="-1"  style="--bs-bg-opacity: .4;background-color: rgba(var(--bs-dark-rgb), var(--bs-bg-opacity)) !important;">
+	<div class="d-flex justify-content-center align-items-center" style="width: 100%; height: 100%;">
+		<div class="d-block justify-content-center align-items-center">
+			<div class="spinner-grow text-success" role="status">
+				<span class="visually-hidden">Loading...</span>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+	<div id="toasError" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+	<div class="toast-header bg-danger">
+		<strong class="me-auto text-white">Error</strong>
+		<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+	</div>
+	<div class="toast-body bg-danger text-white">{{this.toastMsgError}}</div>
+	</div>
+</div>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+	<div id="toasExito" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+	<div class="toast-header bg-success">
+		<strong class="me-auto text-white">Verificado</strong>
+		<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+	</div>
+	<div class="toast-body bg-success text-white">{{this.toastMsgOk}}</div>
+	</div>
+</div>
+
+<div id="content">
+
+	<div style="margin-bottom: 2rem;" class="cf-0">  
+		<div class="container px-2 cuadro-cabecera">
+			<div class="">
+				<div class="col-md-12 col-xs-12 titulo1">MESA DE PARTE VIRTUAL</div>
+			</div>
+		</div>
+	</div>
+
+	<!---->
+	<div class="d-flex justify-content-center mt-3 mb-3"  data-bs-stepper #stepper>
+		<div class="example-button-row">
+			<div class="example-flex-container">
+				<button  mat-mini-fab
+				class="bg-gradient cfbtn-0" (click)="backBtn()">
+					<div class="justify-content-center align-items-center d-flex" >
+						<i class="fa-solid fa-arrow-left fa-xl" style="color:#fff;"></i>
+					</div>
+				</button>
+			</div>
+		</div>
+  	</div>
+	
+	<div class="pb-2">
+
+		<div class="container cuadro-blanco" style="padding-left: 0px!important; padding-right: 0px!important;">
+			<div class=""><h4 class="titulo-11 py-2 text-center" >Registre sus datos para ingresar un nuevo documento</h4></div>
+			<div class="mx-3">
+				<form novalidate [formGroup]="formGroupSearch" autocomplete="off" (ngSubmit)="buscar()" #form0="ngForm"  class=""> 						
+					<div class="row mb-4" style="margin-left: 0px!important; margin-right: 0px!important;">
+
+						<div class="col-sm-12 col-md-3 " >
+							<span class="subtitulo ">Tipo de persona<span *ngIf="this.formGroupSearch.get('tipoPersonaSea')?.errors?.['required']" class="asterisco">(!)</span></span>
+							<select name="tipoPersonaSea" id="tipoPersonaSea" formControlName="tipoPersonaSea"  class="form-select col-md-12" ngModel required (ngModelChange)="seleccionTPSearch($event)">
+								<option selected value="">[SELECCIONE]</option>
+								<option value="NATURAL">NATURAL</option>
+								<option value="JURIDICA">JURIDICA</option>
+							</select>
+						</div>
+
+						<div class="col-sm-12 col-md-3">
+							<span class="subtitulo">Tipo de Documento
+								<span *ngIf="this.formGroupSearch.get('tipoDocumentoP')?.errors?.['required']" class="asterisco">(!)</span>
+							</span>
+							<select name="tipoDocumentoP" id="tipoDocumentoP"  formControlName="tipoDocumentoP" class="form-select col-md-12" (change)="myFunction($event)" ngModel required [disabled]="true">
+								<option selected value="">[SELECCIONE]</option>
+								<option *ngIf="razon_social" value="RUC">RUC</option>
+								<option *ngIf="dni" value="DNI">DNI</option>
+							</select>
+						</div>
+
+						<div class="col-sm-12 col-md-3">
+							<span class="subtitulo">Nº de documento <span *ngIf="this.searchActive" class="asterisco">(!)</span></span>
+							<input name="nroDocumento" formControlName="nroDocumento"  placeholder="Documento" id="nroDocumento" type="text" class="form-control border"  (keypress)="restrictNumeric($event)" (input)="inputCulminado($event)" ngModel required>
+						</div>
+
+						<div class="col-sm-12 col-md-3 row justify-content-center align-items-end" style="margin-left: 0px!important; margin-right: 0px!important;">
+							<div class="row" *ngIf="btnBuscar; else other" >
+								<button class="btn cfbtn-1"  type="submit" [disabled]="this.searchActive">Buscar</button>
+							</div>
+							<ng-template #other>
+								<div class="row">
+									<button class="btn cfbtn-0" type="button" (click)="buscarOtro()">Limpiar</button>
+								</div>
+							</ng-template>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<div *ngIf="tipoDocumentoP.valid" class="container cuadro-blanco" style="padding-left: 0px!important; padding-right: 0px!important;">
+			<div class=""><h4 class="titulo-11 py-2 text-center" >Solicitante</h4></div>
+			<div class="mx-3">
+				<form novalidate [formGroup]="formGroupPersona" autocomplete="off" (ngSubmit)="addPersona(form1.value)" action="/subir"  method="POST" #form1="ngForm" enctype="multipart/form-data"  class="">
+
+					<div *ngIf="tipoDocumentoP.value=='DNI'">
+
+						<!-- <div><img [src]="this.imagenFoto" alt="" class="rounded mx-auto d-block"></div> -->
+
+						<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
+							<div class="col-sm-12 col-md-4">
+								<span class="subtitulo">Apellido Paterno <span *ngIf="this.formGroupPersona.get('paterno')?.status==='INVALID'" class="asterisco">(!)</span></span>
+								<input type="text" class="form-control border" formControlName="paterno" name="paterno"  id="paterno" placeholder="Apellido Paterno"  (keypress)="inputFilter($event)" (input)="inputPerMayu($event,'paterno')" (paste)="onPaste($event)" ngModel required maxlength="50" >
+							</div>
+							<div class="col-sm-12 col-md-4">
+								<span class="subtitulo">Apellido Materno <span *ngIf="this.formGroupPersona.get('materno')?.status==='INVALID'" class="asterisco">(!)</span></span>
+								<input  type="text" class="form-control border" formControlName="materno" name="materno" id="materno" placeholder="Apellido Materno" (keypress)="inputFilter($event)" (input)="inputPerMayu($event,'materno')" (paste)="onPaste($event)" ngModel required maxlength="50">
+							</div>
+							<div class="col-sm-12 col-md-4">
+								<span class="subtitulo">Nombres <span *ngIf="this.formGroupPersona.get('nombres')?.status==='INVALID'" class="asterisco">(!)</span></span>
+								<input type="text"  class="form-control border" formControlName="nombres" name="nombres" id="nombres" placeholder="Nombres" (keypress)="inputFilter($event)" (input)="inputPerMayu($event,'nombres')" (paste)="onPaste($event)" ngModel required maxlength="50">
+							</div>
+						</div> 	
+
+						<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
+							<div class="col-sm-12 col-md-4" >
+								<span class="subtitulo">Teléfono <span *ngIf="this.formGroupPersona.get('telefono')?.status==='INVALID'" class="asterisco">(!)</span></span>
+								<input type="text" class="form-control border"  formControlName="telefono" name="telefono" id="telefono" placeholder="Teléfono" (keypress)="restrictNumeric($event)" maxlength="9"  (paste)="onPaste($event)"  ngModel  required>
+								<div *ngIf="telefono.errors?.['invalidPhoneNumber']" class="text-danger">(Debe comenzar con 9 y tener 9 dígitos en total)</div>
+							</div>
+								
+							<div class="col-sm-12 col-md-8" >
+								<span class="subtitulo">Correo <span *ngIf="this.formGroupPersona.get('correo')?.status==='INVALID'" class="asterisco">(!)</span></span>
+								<input type="email" class="form-control border"  formControlName="correo" name="correo" id="correo" placeholder="E-mail"  (paste)="onPaste($event)" maxlength="200" ngModel required>
+								<span class="text-danger" *ngIf="this.formGroupPersona.get('correo')?.errors?.['email']">(El correo no es válido)</span>
+							</div>
+						</div>
+
+						<div>
+							<div class="col-sm-12 col-md-12">
+								<span class="subtitulo">Dirección <span *ngIf="this.formGroupPersona.get('direccion')?.errors?.['required']" class="asterisco">(!)</span></span>
+								<input type="text" class="form-control border"  formControlName="direccion" name="direccion" id="direccion" placeholder="Dirección"   (paste)="onPaste($event)" (input)="inputPerMayu($event,'direccion')" maxlength="200" ngModel  required>
+							</div> 
+						</div>
+
+						<div class="py-4 row" style="margin-left: 0px!important; margin-right: 0px!important;">
+							<div class="row" *ngIf="btnPersona; else otherDni" style="margin-left: 0px!important; margin-right: 0px!important;">
+								<button class="btn btn-success" [disabled]="form1.invalid"  type="submit" >Continuar</button>
+							</div>
+							
+							<ng-template #otherDni>
+								<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
+									<button class="btn cfbtn-0" type="button" disabled>Continuar</button>
+								</div>
+							</ng-template>
+						</div>
+					</div>
+
+					<!--<div *ngIf="tipoDocumentoP.value=='DNI'"><pre>{{form1.value | json}}</pre></div>-->
+				</form>
+
+				<form novalidate [formGroup]="formGroupEmpresa" autocomplete="off" (ngSubmit)="addPersona(form2.value)" action="/subir"  method="POST" #form2="ngForm" enctype="multipart/form-data"  class="">
+					<div *ngIf="tipoDocumentoP.value=='RUC'">
+						<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
+							<div class="col-sm-12 col-md-6">
+								<span class="subtitulo">Razon Social <span *ngIf="this.formGroupEmpresa.get('razonSocial')?.status==='INVALID'" class="asterisco">(!)</span></span>
+								<input type="text" class="form-control border" formControlName="razonSocial" name="razonSocial"  id="razonSocial" placeholder="Razon social" (keypress)="inputFilter($event)" (paste)="onPaste($event)" (input)="inputEmpMayu($event,'razonSocial')" ngModel required>
+							</div>
+							<div class="col-sm-12 col-md-6">
+								<span class="subtitulo">Tipo Contribuyente<span *ngIf="this.formGroupEmpresa.get('tipoContribuyente')?.status==='INVALID'" class="asterisco">(!)</span></span>
+								<input type="text"  class="form-control border" formControlName="tipoContribuyente" name="tipoContribuyente" id="tipoContribuyente" placeholder="Tipo Contribuyente" (paste)="onPaste($event)" (keypress)="inputFilter($event)" (input)="inputEmpMayu($event,'tipoContribuyente')" ngModel required>
+							</div>
+
+						</div> 
+						<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
+							<div class="col-sm-12 col-md-4">
+								<span class="subtitulo">Departamento <span *ngIf="this.formGroupEmpresa.get('departamento')?.status==='INVALID'" class="asterisco">(!)</span></span>
+								<input  type="text" class="form-control border" formControlName="departamento" name="departamento" id="departamento" placeholder="Departamento" (keypress)="inputFilter($event)" (paste)="onPaste($event)" (input)="inputEmpMayu($event,'departamento')"  ngModel required>
+							</div>
+							<div class="col-sm-12 col-md-4">
+								<span class="subtitulo">Provincia <span *ngIf="this.formGroupEmpresa.get('provincia')?.status==='INVALID'" class="asterisco">(!)</span></span>
+								<input type="text"  class="form-control border" formControlName="provincia" name="provincia" id="provincia" placeholder="Provincia" (keypress)="inputFilter($event)" (paste)="onPaste($event)" (input)="inputEmpMayu($event,'provincia')" ngModel required>
+							</div>
+							<div class="col-sm-12 col-md-4">
+								<span class="subtitulo">Distrito<span *ngIf="this.formGroupEmpresa.get('distrito')?.status==='INVALID'" class="asterisco">(!)</span></span>
+								<input type="text" class="form-control border" formControlName="distrito" name="distrito"  id="distrito" placeholder="Distrito" (keypress)="inputFilter($event)" (paste)="onPaste($event)" (input)="inputEmpMayu($event,'distrito')" ngModel required>
+							</div>
+						</div>
+
+						<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
+							<div class="col-sm-12 col-md-4" >
+								<span class="subtitulo">Teléfono <span *ngIf="this.formGroupEmpresa.get('telefonoEmp')?.status==='INVALID'" class="asterisco">(!)</span></span>
+								<input type="text" class="form-control border"  formControlName="telefonoEmp" name="telefonoEmp" id="telefonoEmp" placeholder="Teléfono" (change)="telefonoEmpchange($event)" (paste)="onPaste($event)"  (keypress)="restrictNumeric($event)" maxlength="9"  ngModel  required>
+								<div *ngIf="telefonoEmp.errors?.['invalidPhoneNumber']" class="text-danger">(Debe comenzar con 9 y tener 9 dígitos en total)</div>
+							</div>
+							
+							<div class="col-sm-12 col-md-8" >
+								<span class="subtitulo">Correo <span *ngIf="this.formGroupEmpresa.get('correoEmp')?.status==='INVALID'" class="asterisco">(!)</span></span>
+								<input type="email" class="form-control border"  formControlName="correoEmp" name="correoEmp" id="correoEmp" placeholder="E-mail" (change)="correoEmpchange($event)" (paste)="onPaste($event)" ngModel required>
+								<span class="text-danger" *ngIf="this.formGroupEmpresa.get('correoEmp')?.errors?.['email']">
+								(El correo no es válido)
+								</span>
+							</div>
+						</div>
+
+						<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
+							<div class="col-sm-12 col-md-12">
+								<span class="subtitulo">Domicilio Fiscal <span *ngIf="this.formGroupEmpresa.get('domicilioFiscal')?.status==='INVALID'" class="asterisco">(!)</span></span>
+								<input  type="text" class="form-control border" formControlName="domicilioFiscal" name="domicilioFiscal" id="domicilioFiscal" placeholder="Domicilio Fiscal" (input)="inputEmpMayu($event,'domicilioFiscal')" (paste)="onPaste($event)" ngModel required>
+							</div>
+						</div>
+
+						<div class="py-4 row  " style="margin-left: 0px!important; margin-right: 0px!important;">
+							<div class="row" *ngIf="btnEmpresa; else otherRuc" style="margin-left: 0px!important; margin-right: 0px!important;">
+								<button class="btn btn-success me-md-2" [disabled]="form2.invalid"  type="submit">Continuar</button>
+							</div>
+							<ng-template #otherRuc>
+								<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
+									<button class="btn cfbtn-0" type="button" disabled>Continuar</button>
+								</div>
+							</ng-template>
+						</div>
+					</div>
+
+				<!--<div *ngIf="tipoDocumentoP.value=='RUC'"><pre>{{form2.value | json}}</pre></div>-->
+				</form>
+			</div>
+		</div>
+
+		<!--- ***********************BEGIN************************-->
+		<!--- FORMULARIO PARA ENVIAR EL DOCUMENTO Y SUBIR EL PDF-->
+
+		<div *ngIf="showFormDocumento" class="container cuadro-blanco" style="padding-left: 0px!important; padding-right: 0px!important;">
+		<!--<div *ngIf="true" class="container cuadro-blanco" style="padding-left: 0px!important; padding-right: 0px!important;">-->
+
+			<div class=""><h4 class="titulo-11 py-2 text-center">Datos del documento</h4></div>
+			<div class="mx-3">
+				
+				<form novalidate [formGroup]="formGroupDoc" autocomplete="off" action="/save" (ngSubmit)="enviar(form3.value)" method="POST" #form3="ngForm" enctype="multipart/form-data"  class="">
+						
+						<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
+							<div class="col-md-12">
+								<span class="subtitulo">Nombre remitente<span *ngIf="this.formGroupDoc.get('nombreRemitente')?.status==='INVALID'" class="asterisco">(!)</span></span>
+								<input  type="text" class="form-control" formControlName="nombreRemitente" name="nombreRemitente" id="nombreRemitente" placeholder="Nombre remitente" (keypress)="inputFilter($event)" ngModel required>
+							</div>
+						</div>
+
+						<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
+							<div class="col-md-12">
+								<span class="subtitulo">Destino<span *ngIf="this.formGroupDoc.get('idDestino')?.status==='INVALID'" class="asterisco">(!)</span></span>
+								<select name="idDestino" id="idDestino"  formControlName="idDestino"  class="custom-select col-md-12" (change)="tipodocchange($event)" ngModel required >
+									<option value="">[SELECCIONE]</option>
+									<option *ngFor="let doc of selectTipoOfiCie;" [value]="doc['ID']">{{doc['DESCRIPCION']}}</option>
+								</select>
+							</div> 
+						</div>
+					
+						<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
+							<div class="col-md-12">
+								<span class="subtitulo">Tipo documento <span *ngIf="this.formGroupDoc.get('idTipoDocumento')?.status==='INVALID'" class="asterisco">(!)</span></span>
+								<select name="idTipoDocumento" id="idTipoDocumento"  formControlName="idTipoDocumento"  class="custom-select col-md-12" (change)="tipodocchangeCie($event)" ngModel required>
+									<option value="">[SELECCIONE]</option>
+									<option *ngFor="let doc of selectTipoDocCie;" [value]="doc['ID_TIPO_DOCUMENTO']">{{doc['DESCRIPCION']}}</option>
+								</select>
+							</div>
+						</div>
+						
+						<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
+							<div class="col-md-12">
+								<span class="subtitulo">Asunto <span *ngIf="this.formGroupDoc.get('asunto')?.status==='INVALID'" class="asterisco">(!)</span></span>
+								<input  type="text" class="form-control border" formControlName="asunto" name="asunto" id="asunto" placeholder="Asunto" (input)="inputDocMayu($event,'asunto')" ngModel required>
+							</div>
+						</div>
+
+						<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
+							<div class="col-md-12">
+								<span class="subtitulo">Documento<span *ngIf="this.formGroupDoc.get('countDocumento')?.status==='INVALID'" class="asterisco">(!)</span></span>
+								<div class="custom-file">
+									<input #myInput type="file" class="custom-file-input bg-success" formControlName="countDocumento" placeholder="Seleciones File" name="countDocumento" id="countDocumento" (change)="onFileDocChange($event)" accept=".pdf" data-browse="Bestand kiezen" data-inline="true">
+
+									<input hidden id="fileDocumento" name="fileDocumento" formControlName="fileDocumento" placeholder="Ningun archivo seleccionado" accept=".pdf">
+
+									<span  class="custom-file-label" id="archivos1"  name="archivos1">{{uploadedDocumentoFiles}}</span>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div *ngFor="let item of fileTmpDocSeleccion; let index = index" class="bg-body-secondary my-2 p-1 border d-flex" >
+									<div class=" flex-grow-1">
+										<span class="mr-3" style="font-weight: bold;">{{item.name}}</span>
+										<span class="text-primary" style="font-weight: bold;">({{item.kilobit | number:'1.1-1'}}K)</span><br/>
+									</div>
+									<div class="d-flex justify-content-center align-items-center">
+										<button type="button" class="btn btn-link" data-bs-toggle="tooltip" data-bs-placement="botton" data-bs-title="Quitar archivo adjunto"  (click)="removeDoc(item, index)">
+											<i class="fa-solid fa-delete-left fa-lg" style="color: #000;"></i>
+										</button>
+									</div>
+								</div>	
+							</div>
+						</div>
+
+						<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
+							<div class="col-md-12">
+								<span class="subtitulo">Adjuntar Anexo</span>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1"  (change)="onRadioSi($event)">
+									<label class="form-check-label" for="flexRadioDefault1">SI</label>
+								</div>
+
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked  (change)="onRadioNo($event)">
+									<label class="form-check-label" for="flexRadioDefault2">NO</label>
+								</div>							
+							</div>
+						</div>
+
+						
+						<div *ngIf="radioAnexo" class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
+							<div class="col-md-12">
+								<span class="subtitulo">Anexos (Max 3)<span *ngIf="this.formGroupDoc.get('countAnexo')?.status==='INVALID'" class="asterisco">(!)</span></span>
+								<div class="custom-file">
+									<input #myInput type="file" class="custom-file-input bg-success" formControlName="countAnexo" placeholder="Seleciones File" name="countAnexo" id="countAnexo" (change)="onFileAnexoChange($event)" accept=".pdf" data-browse="Bestand kiezen" data-inline="true" multiple>
+
+									<input hidden id="fileAnexo" name="fileAnexo" formControlName="fileAnexo" placeholder="Ningun archivo seleccionado" >
+
+									<span  class="custom-file-label" id="archivos2"  name="archivos2">{{uploadedAnexoFiles}}</span>
+								</div>
+							</div>
+							<div class="col-md-12">
+								<div *ngFor="let item of fileTmpAnexoSeleccion; let index = index" class="bg-body-secondary my-2 p-1 border d-flex">
+									<div class=" flex-grow-1">
+										<span class="mr-3" style="font-weight: bold;">{{item.name}}</span>
+										<span class="text-primary" style="font-weight: bold;">({{item.kilobit | number:'1.1-1'}}K)</span><br/>
+									</div>
+									<div class="d-flex justify-content-center align-items-center">
+										<button type="button" class="btn btn-link" data-bs-toggle="tooltip" data-bs-placement="botton" data-bs-title="Quitar archivo adjunto"  (click)="removeAnexo(item, index)">
+											<i class="fa-solid fa-delete-left fa-lg" style="color: #000;"></i>
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
+							<div class="col-md-12">
+								<span class="subtitulo">Observaciones</span>
+								<input  type="text" class="form-control border" formControlName="observaciones" name="observaciones" id="observaciones" placeholder="Observaciones" (input)="inputDocMayu($event,'observaciones')" ngModel>
+							</div>
+						</div>
+<!--	-->
+						<div class="row mx-2 my-5">
+							<button class="btn btn-success" [disabled]="form3.invalid"   type="submit">Enviar </button>
+						</div>
+
+				</form>
+				
+			</div>
+		</div> 
+
+
+		<!--- *************************END**********************************-->
+		
+	</div>
+	
+	<div id="myModal" class="modal" tabindex="-1" role="dialog" style="--bs-bg-opacity: .4;background-color: rgba(var(--bs-dark-rgb), var(--bs-bg-opacity)) !important;">
+		<div class="modal-dialog modal-dialog-centered"  style="max-width: 50rem;">
+			<div class="modal-content" >
+				<!-- <div id="pdfhtml"> -->
+					<div class="mx-3 mt-3" style="height: 2rem;">
+						<span style="font-weight: bold; font-size: x-large;">Documento</span>
+
+						<button class="close rounded" (click)="salirExpediente()" style="color: #000; height: 100%;">
+							<i class="fa-solid fa-xmark"></i>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="table-responsive">
+							<table class="table table-bordered table-sm">
+								<thead class="">
+									<tr>
+										<th scope="col" class="table-dark">Expediente</th>
+										<th scope="col" class="table-dark">Clave Web</th>
+									</tr>
+								</thead>
+								<tbody class="table-group-divider">
+									<tr>
+										<td >{{this.resultDocumento.numeroexpediente}}</td>
+										<td>{{this.resultDocumento.clave_web}}</td>
+									</tr>
+									<tr>
+										<th scope="row" class="table-dark">Fecha Recepción:</th>
+										<td>{{this.getFecha(this.resultDocumento.fec_recepcion)}}</td>
+									</tr>
+									<tr>
+										<th scope="row" class="table-dark">Asunto:</th>
+										<td>{{this.resultDocumento.asunto}}</td>
+									</tr>
+									<tr>
+										<th scope="row" class="table-dark">Remitente:</th>
+										<td>{{this.resultDocumento.remitente}}</td>
+									</tr>
+									<tr>
+										<th scope="row" class="table-dark">N° Folios:</th>
+										<td>{{this.resultDocumento.folios}}</td>
+									</tr>
+									<tr>
+										<th scope="row" class="table-dark">Domicilio:</th>
+										<td>{{this.resultDocumento.domicilio}}</td>
+									</tr>
+									<tr>
+										<th scope="row" class="table-dark">{{this.resultDocumento.tipoDocumento}}:</th>
+										<td>{{this.resultDocumento.nroDoc}}</td>
+									</tr>							
+								</tbody>
+							</table>
+						</div>	
+						<div class="">
+							<h2 class="text-center">{{ 'Municipalidad de Cieneguilla' | uppercase}}</h2>
+							<h4 class="text-center">{{ 'Secretaria General' | uppercase}}</h4>
+							<h4 class="text-center">{{ 'Sub gerencia de gestión documentaria ' | uppercase}}</h4>
+							<div class="text-center">
+								<span class="">{{ 'La recepción del presente Expediente NO indica'}}</span><br/>
+								<span class="">{{ 'ACEPTACIÓN'}}</span><br/>
+								<span class="">{{ 'del mismo debiendo cumplir con el T.U.P.A. Institucional'}}</span><br/>
+								<span class="">{{ 'Según el Numeral 6 del Art. 113 de la Ley 27444'}}</span>
+							</div>
+						</div>									
+					</div>
+				
+				<!-- </div> -->
+				<div class="modal-footer">
+					<div class="example-button-container">
+						<button mat-fab
+							class="bg-gradient table-dark"
+							data-bs-toggle="tooltip" 
+							data-bs-title="Descargar" 
+							data-bs-placement="bottom"
+							(click)="downloadFileJspdf(this.resultDocumento)"
+						>
+							<!-- <mat-icon>delete</mat-icon> -->
+							<div class="justify-content-center align-items-center d-flex"  style="width: 1.5rem; height: 1.5rem;">
+								<i class="fa-solid fa-download fa-xl" style="color: #fff;"></i>
+							</div>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+

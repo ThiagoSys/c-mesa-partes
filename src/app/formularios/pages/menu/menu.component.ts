@@ -16,11 +16,6 @@ export class MenuComponent implements OnInit {
     this.getWidth = window.innerWidth
     this.getHeight = window.innerHeight
 
-    // var _content:HTMLInputElement = (<HTMLInputElement>document.getElementById('transitionContent'));
-    // _content.style.top = 'auto';
-    // _content.classList.remove('fr-content-transition');
-    // _content.classList.add('.fr-content-transition-v');
-
     if(this.getWidth<768){
       var _subMenu:HTMLInputElement = (<HTMLInputElement>document.getElementById('subMenu'));
       var _subMenuFoo:HTMLInputElement = (<HTMLInputElement>document.getElementById('subMenuFooter'));

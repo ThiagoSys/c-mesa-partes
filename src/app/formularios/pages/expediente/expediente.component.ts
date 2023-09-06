@@ -348,7 +348,7 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
     this.getWidth = window.innerWidth;
     this.getHeight = window.innerHeight;
 
-    //this.openModal();
+    // this.openModal();
   }
   ngAfterViewInit(): void { 
     $('[data-bs-toggle="tooltip"]').tooltip();

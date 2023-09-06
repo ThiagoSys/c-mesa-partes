@@ -8,8 +8,6 @@ import { SoaptramiteService } from '../../services/soaptramite.service';
 import { Router } from '@angular/router';
 
 declare var bootstrap: any; // Suponiendo que Bootstrap está disponible globalmente
-//import {} from ''
-
 
 interface propsExpdiente {
   ID_DOCUMENTO: String,

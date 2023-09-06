@@ -58,15 +58,15 @@
 
 	<div class="container cuadro-blanco" style="padding-left: 0px!important; padding-right: 0px!important;">
 	<!--<div class=""><h4 class="titulo-11 py-2 text-center">Consultar expediente</h4></div>-->
-
+		<div class=""><h4 class="titulo-11 py-2 text-center">Consulta</h4></div>
 		<div class="">
 			<div class="">
 				<form novalidate [formGroup]="formGroupConsul" autocomplete="off" (ngSubmit)="buscarExp(form0.value)" #form0="ngForm"  class="">
-					<div class="row mr-3 ml-3">
+					<div class="row mr-3 ml-3" style="margin-left: 0px!important; margin-right: 0px!important;">
 						<div class="col-md-3 pb-3">
 							<div class="" style="margin-left: 0px!important; margin-right: 0px!important;">
 								<span class="subtitulo">Año</span>
-								<select name="year" id="year"  formControlName="year"  class="custom-select col-md-12" (change)="tipoYear($event)" ngModel required>
+								<select name="year" id="year"  formControlName="year"  class="form-select custom-select col-md-12" (change)="tipoYear($event)" ngModel required>
 									<option value="">[SELECCIONE]</option>
 									<option *ngFor="let doc of selectTipoYear;" [value]="doc['year']">{{doc['year']}}</option>
 								</select>
@@ -100,25 +100,12 @@
 
 					</div>
 
-
-
-					<!-- <pre>
-						{{form0.value | json}}
-						{{form0.valid | json}}
-					</pre> -->
-
 				</form>
 			</div>
 		</div>		
 	</div>
 
-	<!-- <div>
-		<button (click)="getNroDias()">sss</button>
-		<p>{{this.getNroDias()}}</p>
-	</div> -->
-
 	<div *ngIf="listExpediente.length!==0" class="container cuadro-blanco" style="padding-left: 0px!important; padding-right: 0px!important;">
-		<!--<div class=""><h4 class="titulo-11 py-2 text-center">Consultar expediente</h4></div>-->
 
 		<div *ngIf="listExpediente.length!==0" class="mt-5  ml-3 mr-3">
 			<div class="d-flex justify-content-around">

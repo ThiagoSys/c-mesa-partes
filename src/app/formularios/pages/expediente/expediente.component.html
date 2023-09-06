@@ -59,10 +59,10 @@
 			<div class=""><h4 class="titulo-11 py-2 text-center" >Registre sus datos para ingresar un nuevo documento</h4></div>
 			<div class="mx-3">
 				<form novalidate [formGroup]="formGroupSearch" autocomplete="off" (ngSubmit)="buscar()" #form0="ngForm"  class=""> 						
-					<div class="row mb-4" style="margin-left: 0px!important; margin-right: 0px!important;">
+					<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
 
-						<div class="col-sm-12 col-md-3 " >
-							<span class="subtitulo ">Tipo de persona<span *ngIf="this.formGroupSearch.get('tipoPersonaSea')?.errors?.['required']" class="asterisco">(!)</span></span>
+						<div class="col-sm-12 col-md-3 mb-4" >
+							<span class="subtitulo ">Tipo de persona <span *ngIf="this.formGroupSearch.get('tipoPersonaSea')?.errors?.['required']" class="ml-2 text-danger">(!)</span></span>
 							<select name="tipoPersonaSea" id="tipoPersonaSea" formControlName="tipoPersonaSea"  class="form-select col-md-12" ngModel required (ngModelChange)="seleccionTPSearch($event)">
 								<option selected value="">[SELECCIONE]</option>
 								<option value="NATURAL">NATURAL</option>
@@ -70,9 +70,8 @@
 							</select>
 						</div>
 
-						<div class="col-sm-12 col-md-3">
-							<span class="subtitulo">Tipo de Documento
-								<span *ngIf="this.formGroupSearch.get('tipoDocumentoP')?.errors?.['required']" class="asterisco">(!)</span>
+						<div class="col-sm-12 col-md-3 mb-4">
+							<span class="subtitulo">Tipo de Documento <span *ngIf="this.formGroupSearch.get('tipoDocumentoP')?.errors?.['required']" class="text-danger">(!)</span>
 							</span>
 							<select name="tipoDocumentoP" id="tipoDocumentoP"  formControlName="tipoDocumentoP" class="form-select col-md-12" (change)="myFunction($event)" ngModel required [disabled]="true">
 								<option selected value="">[SELECCIONE]</option>
@@ -81,17 +80,17 @@
 							</select>
 						</div>
 
-						<div class="col-sm-12 col-md-3">
-							<span class="subtitulo">Nº de documento <span *ngIf="this.searchActive" class="asterisco">(!)</span></span>
+						<div class="col-sm-12 col-md-3 mb-4">
+							<span class="subtitulo">Nº de documento <span *ngIf="this.searchActive" class="text-danger">(!)</span></span>
 							<input name="nroDocumento" formControlName="nroDocumento"  placeholder="Documento" id="nroDocumento" type="text" class="form-control border"  (keypress)="restrictNumeric($event)" (input)="inputCulminado($event)" ngModel required>
 						</div>
 
-						<div class="col-sm-12 col-md-3 row justify-content-center align-items-end" style="margin-left: 0px!important; margin-right: 0px!important;">
-							<div class="row" *ngIf="btnBuscar; else other" >
+						<div class="col-sm-12 col-md-3 mb-4 row justify-content-center align-items-end" style="margin-left: 0px!important; margin-right: 0px!important;">
+							<div class="row" *ngIf="btnBuscar; else other" style="margin-left: 0px!important; margin-right: 0px!important;">
 								<button class="btn cfbtn-1"  type="submit" [disabled]="this.searchActive">Buscar</button>
 							</div>
 							<ng-template #other>
-								<div class="row">
+								<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
 									<button class="btn cfbtn-0" type="button" (click)="buscarOtro()">Limpiar</button>
 								</div>
 							</ng-template>
@@ -111,37 +110,37 @@
 						<!-- <div><img [src]="this.imagenFoto" alt="" class="rounded mx-auto d-block"></div> -->
 
 						<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
-							<div class="col-sm-12 col-md-4">
-								<span class="subtitulo">Apellido Paterno <span *ngIf="this.formGroupPersona.get('paterno')?.status==='INVALID'" class="asterisco">(!)</span></span>
+							<div class="col-sm-12 col-md-4 mb-4">
+								<span class="subtitulo">Apellido Paterno <span *ngIf="this.formGroupPersona.get('paterno')?.status==='INVALID'" class="text-danger">(!)</span></span>
 								<input type="text" class="form-control border" formControlName="paterno" name="paterno"  id="paterno" placeholder="Apellido Paterno"  (keypress)="inputFilter($event)" (input)="inputPerMayu($event,'paterno')" (paste)="onPaste($event)" ngModel required maxlength="50" >
 							</div>
-							<div class="col-sm-12 col-md-4">
-								<span class="subtitulo">Apellido Materno <span *ngIf="this.formGroupPersona.get('materno')?.status==='INVALID'" class="asterisco">(!)</span></span>
+							<div class="col-sm-12 col-md-4 mb-4">
+								<span class="subtitulo">Apellido Materno <span *ngIf="this.formGroupPersona.get('materno')?.status==='INVALID'" class="text-danger">(!)</span></span>
 								<input  type="text" class="form-control border" formControlName="materno" name="materno" id="materno" placeholder="Apellido Materno" (keypress)="inputFilter($event)" (input)="inputPerMayu($event,'materno')" (paste)="onPaste($event)" ngModel required maxlength="50">
 							</div>
-							<div class="col-sm-12 col-md-4">
-								<span class="subtitulo">Nombres <span *ngIf="this.formGroupPersona.get('nombres')?.status==='INVALID'" class="asterisco">(!)</span></span>
+							<div class="col-sm-12 col-md-4 mb-4">
+								<span class="subtitulo">Nombres <span *ngIf="this.formGroupPersona.get('nombres')?.status==='INVALID'" class="text-danger">(!)</span></span>
 								<input type="text"  class="form-control border" formControlName="nombres" name="nombres" id="nombres" placeholder="Nombres" (keypress)="inputFilter($event)" (input)="inputPerMayu($event,'nombres')" (paste)="onPaste($event)" ngModel required maxlength="50">
 							</div>
 						</div> 	
 
 						<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
-							<div class="col-sm-12 col-md-4" >
-								<span class="subtitulo">Teléfono <span *ngIf="this.formGroupPersona.get('telefono')?.status==='INVALID'" class="asterisco">(!)</span></span>
+							<div class="col-sm-12 col-md-4 mb-4" >
+								<span class="subtitulo">Teléfono <span *ngIf="this.formGroupPersona.get('telefono')?.status==='INVALID'" class="text-danger">(!)</span></span>
 								<input type="text" class="form-control border"  formControlName="telefono" name="telefono" id="telefono" placeholder="Teléfono" (keypress)="restrictNumeric($event)" maxlength="9"  (paste)="onPaste($event)"  ngModel  required>
 								<div *ngIf="telefono.errors?.['invalidPhoneNumber']" class="text-danger">(Debe comenzar con 9 y tener 9 dígitos en total)</div>
 							</div>
 								
 							<div class="col-sm-12 col-md-8" >
-								<span class="subtitulo">Correo <span *ngIf="this.formGroupPersona.get('correo')?.status==='INVALID'" class="asterisco">(!)</span></span>
+								<span class="subtitulo">Correo <span *ngIf="this.formGroupPersona.get('correo')?.status==='INVALID'" class="text-danger">(!)</span></span>
 								<input type="email" class="form-control border"  formControlName="correo" name="correo" id="correo" placeholder="E-mail"  (paste)="onPaste($event)" maxlength="200" ngModel required>
 								<span class="text-danger" *ngIf="this.formGroupPersona.get('correo')?.errors?.['email']">(El correo no es válido)</span>
 							</div>
 						</div>
 
-						<div>
+						<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
 							<div class="col-sm-12 col-md-12">
-								<span class="subtitulo">Dirección <span *ngIf="this.formGroupPersona.get('direccion')?.errors?.['required']" class="asterisco">(!)</span></span>
+								<span class="subtitulo">Dirección <span *ngIf="this.formGroupPersona.get('direccion')?.errors?.['required']" class="text-danger">(!)</span></span>
 								<input type="text" class="form-control border"  formControlName="direccion" name="direccion" id="direccion" placeholder="Dirección"   (paste)="onPaste($event)" (input)="inputPerMayu($event,'direccion')" maxlength="200" ngModel  required>
 							</div> 
 						</div>
@@ -165,40 +164,40 @@
 				<form novalidate [formGroup]="formGroupEmpresa" autocomplete="off" (ngSubmit)="addPersona(form2.value)" action="/subir"  method="POST" #form2="ngForm" enctype="multipart/form-data"  class="">
 					<div *ngIf="tipoDocumentoP.value=='RUC'">
 						<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
-							<div class="col-sm-12 col-md-6">
-								<span class="subtitulo">Razon Social <span *ngIf="this.formGroupEmpresa.get('razonSocial')?.status==='INVALID'" class="asterisco">(!)</span></span>
+							<div class="col-sm-12 col-md-6 mb-4">
+								<span class="subtitulo">Razon Social <span *ngIf="this.formGroupEmpresa.get('razonSocial')?.status==='INVALID'" class="text-danger">(!)</span></span>
 								<input type="text" class="form-control border" formControlName="razonSocial" name="razonSocial"  id="razonSocial" placeholder="Razon social" (keypress)="inputFilter($event)" (paste)="onPaste($event)" (input)="inputEmpMayu($event,'razonSocial')" ngModel required>
 							</div>
-							<div class="col-sm-12 col-md-6">
-								<span class="subtitulo">Tipo Contribuyente<span *ngIf="this.formGroupEmpresa.get('tipoContribuyente')?.status==='INVALID'" class="asterisco">(!)</span></span>
+							<div class="col-sm-12 col-md-6 mb-4">
+								<span class="subtitulo">Tipo Contribuyente<span *ngIf="this.formGroupEmpresa.get('tipoContribuyente')?.status==='INVALID'" class="text-danger">(!)</span></span>
 								<input type="text"  class="form-control border" formControlName="tipoContribuyente" name="tipoContribuyente" id="tipoContribuyente" placeholder="Tipo Contribuyente" (paste)="onPaste($event)" (keypress)="inputFilter($event)" (input)="inputEmpMayu($event,'tipoContribuyente')" ngModel required>
 							</div>
 
 						</div> 
 						<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
-							<div class="col-sm-12 col-md-4">
-								<span class="subtitulo">Departamento <span *ngIf="this.formGroupEmpresa.get('departamento')?.status==='INVALID'" class="asterisco">(!)</span></span>
+							<div class="col-sm-12 col-md-4 mb-4">
+								<span class="subtitulo">Departamento <span *ngIf="this.formGroupEmpresa.get('departamento')?.status==='INVALID'" class="text-danger">(!)</span></span>
 								<input  type="text" class="form-control border" formControlName="departamento" name="departamento" id="departamento" placeholder="Departamento" (keypress)="inputFilter($event)" (paste)="onPaste($event)" (input)="inputEmpMayu($event,'departamento')"  ngModel required>
 							</div>
-							<div class="col-sm-12 col-md-4">
-								<span class="subtitulo">Provincia <span *ngIf="this.formGroupEmpresa.get('provincia')?.status==='INVALID'" class="asterisco">(!)</span></span>
+							<div class="col-sm-12 col-md-4 mb-4">
+								<span class="subtitulo">Provincia <span *ngIf="this.formGroupEmpresa.get('provincia')?.status==='INVALID'" class="text-danger">(!)</span></span>
 								<input type="text"  class="form-control border" formControlName="provincia" name="provincia" id="provincia" placeholder="Provincia" (keypress)="inputFilter($event)" (paste)="onPaste($event)" (input)="inputEmpMayu($event,'provincia')" ngModel required>
 							</div>
-							<div class="col-sm-12 col-md-4">
-								<span class="subtitulo">Distrito<span *ngIf="this.formGroupEmpresa.get('distrito')?.status==='INVALID'" class="asterisco">(!)</span></span>
+							<div class="col-sm-12 col-md-4 mb-4">
+								<span class="subtitulo">Distrito<span *ngIf="this.formGroupEmpresa.get('distrito')?.status==='INVALID'" class="text-danger">(!)</span></span>
 								<input type="text" class="form-control border" formControlName="distrito" name="distrito"  id="distrito" placeholder="Distrito" (keypress)="inputFilter($event)" (paste)="onPaste($event)" (input)="inputEmpMayu($event,'distrito')" ngModel required>
 							</div>
 						</div>
 
 						<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
-							<div class="col-sm-12 col-md-4" >
-								<span class="subtitulo">Teléfono <span *ngIf="this.formGroupEmpresa.get('telefonoEmp')?.status==='INVALID'" class="asterisco">(!)</span></span>
+							<div class="col-sm-12 col-md-4 mb-4" >
+								<span class="subtitulo">Teléfono <span *ngIf="this.formGroupEmpresa.get('telefonoEmp')?.status==='INVALID'" class="text-danger">(!)</span></span>
 								<input type="text" class="form-control border"  formControlName="telefonoEmp" name="telefonoEmp" id="telefonoEmp" placeholder="Teléfono" (change)="telefonoEmpchange($event)" (paste)="onPaste($event)"  (keypress)="restrictNumeric($event)" maxlength="9"  ngModel  required>
 								<div *ngIf="telefonoEmp.errors?.['invalidPhoneNumber']" class="text-danger">(Debe comenzar con 9 y tener 9 dígitos en total)</div>
 							</div>
 							
-							<div class="col-sm-12 col-md-8" >
-								<span class="subtitulo">Correo <span *ngIf="this.formGroupEmpresa.get('correoEmp')?.status==='INVALID'" class="asterisco">(!)</span></span>
+							<div class="col-sm-12 col-md-8 mb-4" >
+								<span class="subtitulo">Correo <span *ngIf="this.formGroupEmpresa.get('correoEmp')?.status==='INVALID'" class="text-danger">(!)</span></span>
 								<input type="email" class="form-control border"  formControlName="correoEmp" name="correoEmp" id="correoEmp" placeholder="E-mail" (change)="correoEmpchange($event)" (paste)="onPaste($event)" ngModel required>
 								<span class="text-danger" *ngIf="this.formGroupEmpresa.get('correoEmp')?.errors?.['email']">
 								(El correo no es válido)
@@ -208,7 +207,7 @@
 
 						<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
 							<div class="col-sm-12 col-md-12">
-								<span class="subtitulo">Domicilio Fiscal <span *ngIf="this.formGroupEmpresa.get('domicilioFiscal')?.status==='INVALID'" class="asterisco">(!)</span></span>
+								<span class="subtitulo">Domicilio Fiscal <span *ngIf="this.formGroupEmpresa.get('domicilioFiscal')?.status==='INVALID'" class="text-danger">(!)</span></span>
 								<input  type="text" class="form-control border" formControlName="domicilioFiscal" name="domicilioFiscal" id="domicilioFiscal" placeholder="Domicilio Fiscal" (input)="inputEmpMayu($event,'domicilioFiscal')" (paste)="onPaste($event)" ngModel required>
 							</div>
 						</div>
@@ -234,7 +233,7 @@
 		<!--- FORMULARIO PARA ENVIAR EL DOCUMENTO Y SUBIR EL PDF-->
 
 		<div *ngIf="showFormDocumento" class="container cuadro-blanco" style="padding-left: 0px!important; padding-right: 0px!important;">
-		<!--<div *ngIf="true" class="container cuadro-blanco" style="padding-left: 0px!important; padding-right: 0px!important;">-->
+		<!-- <div *ngIf="true" class="container cuadro-blanco" style="padding-left: 0px!important; padding-right: 0px!important;"> -->
 
 			<div class=""><h4 class="titulo-11 py-2 text-center">Datos del documento</h4></div>
 			<div class="mx-3">
@@ -242,16 +241,16 @@
 				<form novalidate [formGroup]="formGroupDoc" autocomplete="off" action="/save" (ngSubmit)="enviar(form3.value)" method="POST" #form3="ngForm" enctype="multipart/form-data"  class="">
 						
 						<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
-							<div class="col-md-12">
-								<span class="subtitulo">Nombre remitente<span *ngIf="this.formGroupDoc.get('nombreRemitente')?.status==='INVALID'" class="asterisco">(!)</span></span>
+							<div class="col-md-12 mb-4">
+								<span class="subtitulo">Nombre remitente<span *ngIf="this.formGroupDoc.get('nombreRemitente')?.status==='INVALID'" class="text-danger">(!)</span></span>
 								<input  type="text" class="form-control" formControlName="nombreRemitente" name="nombreRemitente" id="nombreRemitente" placeholder="Nombre remitente" (keypress)="inputFilter($event)" ngModel required>
 							</div>
 						</div>
 
 						<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
-							<div class="col-md-12">
-								<span class="subtitulo">Destino<span *ngIf="this.formGroupDoc.get('idDestino')?.status==='INVALID'" class="asterisco">(!)</span></span>
-								<select name="idDestino" id="idDestino"  formControlName="idDestino"  class="custom-select col-md-12" (change)="tipodocchange($event)" ngModel required >
+							<div class="col-md-12 mb-4">
+								<span class="subtitulo">Destino<span *ngIf="this.formGroupDoc.get('idDestino')?.status==='INVALID'" class="text-danger">(!)</span></span>
+								<select name="idDestino" id="idDestino"  formControlName="idDestino"  class="form-select custom-select col-md-12" (change)="tipodocchange($event)" ngModel required >
 									<option value="">[SELECCIONE]</option>
 									<option *ngFor="let doc of selectTipoOfiCie;" [value]="doc['ID']">{{doc['DESCRIPCION']}}</option>
 								</select>
@@ -259,9 +258,9 @@
 						</div>
 					
 						<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
-							<div class="col-md-12">
-								<span class="subtitulo">Tipo documento <span *ngIf="this.formGroupDoc.get('idTipoDocumento')?.status==='INVALID'" class="asterisco">(!)</span></span>
-								<select name="idTipoDocumento" id="idTipoDocumento"  formControlName="idTipoDocumento"  class="custom-select col-md-12" (change)="tipodocchangeCie($event)" ngModel required>
+							<div class="col-md-12 mb-4">
+								<span class="subtitulo">Tipo documento <span *ngIf="this.formGroupDoc.get('idTipoDocumento')?.status==='INVALID'" class="text-danger">(!)</span></span>
+								<select name="idTipoDocumento" id="idTipoDocumento"  formControlName="idTipoDocumento"  class="form-select custom-select col-md-12" (change)="tipodocchangeCie($event)" ngModel required>
 									<option value="">[SELECCIONE]</option>
 									<option *ngFor="let doc of selectTipoDocCie;" [value]="doc['ID_TIPO_DOCUMENTO']">{{doc['DESCRIPCION']}}</option>
 								</select>
@@ -269,27 +268,27 @@
 						</div>
 						
 						<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
-							<div class="col-md-12">
-								<span class="subtitulo">Asunto <span *ngIf="this.formGroupDoc.get('asunto')?.status==='INVALID'" class="asterisco">(!)</span></span>
+							<div class="col-md-12 mb-4">
+								<span class="subtitulo">Asunto <span *ngIf="this.formGroupDoc.get('asunto')?.status==='INVALID'" class="text-danger">(!)</span></span>
 								<input  type="text" class="form-control border" formControlName="asunto" name="asunto" id="asunto" placeholder="Asunto" (input)="inputDocMayu($event,'asunto')" ngModel required>
 							</div>
 						</div>
 
 						<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
 							<div class="col-md-12">
-								<span class="subtitulo">Documento<span *ngIf="this.formGroupDoc.get('countDocumento')?.status==='INVALID'" class="asterisco">(!)</span></span>
+								<span class="subtitulo">Documento<span *ngIf="this.formGroupDoc.get('countDocumento')?.status==='INVALID'" class="text-danger">(!)</span></span>
 								<div class="custom-file">
-									<input #myInput type="file" class="custom-file-input bg-success" formControlName="countDocumento" placeholder="Seleciones File" name="countDocumento" id="countDocumento" (change)="onFileDocChange($event)" accept=".pdf" data-browse="Bestand kiezen" data-inline="true">
+									<input #myInput type="file" class="form-control custom-file-input" formControlName="countDocumento" placeholder="Seleciones File" name="countDocumento" id="countDocumento" (change)="onFileDocChange($event)" accept=".pdf" data-browse="Bestand kiezen" data-inline="true" value="dsd">
 
 									<input hidden id="fileDocumento" name="fileDocumento" formControlName="fileDocumento" placeholder="Ningun archivo seleccionado" accept=".pdf">
 
-									<span  class="custom-file-label" id="archivos1"  name="archivos1">{{uploadedDocumentoFiles}}</span>
+									<!-- <span  class="custom-file-label" id="archivos1"  name="archivos1">{{uploadedDocumentoFiles}}</span> -->
 								</div>
 							</div>
-							<div class="col-md-12">
+							<div class="col-md-12 mb-4 mt-1">
 								<div *ngFor="let item of fileTmpDocSeleccion; let index = index" class="bg-body-secondary my-2 p-1 border d-flex" >
-									<div class=" flex-grow-1">
-										<span class="mr-3" style="font-weight: bold;">{{item.name}}</span>
+									<div class=" flex-grow-1 align-items-center d-flex">
+										<span class="pr-3" style="font-weight: bold;">{{item.name}}</span>
 										<span class="text-primary" style="font-weight: bold;">({{item.kilobit | number:'1.1-1'}}K)</span><br/>
 									</div>
 									<div class="d-flex justify-content-center align-items-center">
@@ -302,7 +301,7 @@
 						</div>
 
 						<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
-							<div class="col-md-12">
+							<div class="col-md-12 mb-4 ">
 								<span class="subtitulo">Adjuntar Anexo</span>
 								<div class="form-check">
 									<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1"  (change)="onRadioSi($event)">
@@ -319,18 +318,18 @@
 						
 						<div *ngIf="radioAnexo" class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
 							<div class="col-md-12">
-								<span class="subtitulo">Anexos (Max 3)<span *ngIf="this.formGroupDoc.get('countAnexo')?.status==='INVALID'" class="asterisco">(!)</span></span>
+								<span class="subtitulo">Anexos (Max 3)<span *ngIf="this.formGroupDoc.get('countAnexo')?.status==='INVALID'" class="text-danger">(!)</span></span>
 								<div class="custom-file">
-									<input #myInput type="file" class="custom-file-input bg-success" formControlName="countAnexo" placeholder="Seleciones File" name="countAnexo" id="countAnexo" (change)="onFileAnexoChange($event)" accept=".pdf" data-browse="Bestand kiezen" data-inline="true" multiple>
+									<input #myInput type="file" class="form-control custom-file-input" formControlName="countAnexo" placeholder="Seleciones File" name="countAnexo" id="countAnexo" (change)="onFileAnexoChange($event)" accept=".pdf" data-browse="Bestand kiezen" data-inline="true" multiple>
 
 									<input hidden id="fileAnexo" name="fileAnexo" formControlName="fileAnexo" placeholder="Ningun archivo seleccionado" >
 
-									<span  class="custom-file-label" id="archivos2"  name="archivos2">{{uploadedAnexoFiles}}</span>
+									<!-- <span  class="custom-file-label" id="archivos2"  name="archivos2">{{uploadedAnexoFiles}}</span> -->
 								</div>
 							</div>
-							<div class="col-md-12">
+							<div class="col-md-12 mb-4 mt-1">
 								<div *ngFor="let item of fileTmpAnexoSeleccion; let index = index" class="bg-body-secondary my-2 p-1 border d-flex">
-									<div class=" flex-grow-1">
+									<div class="flex-grow-1 align-items-center d-flex">
 										<span class="mr-3" style="font-weight: bold;">{{item.name}}</span>
 										<span class="text-primary" style="font-weight: bold;">({{item.kilobit | number:'1.1-1'}}K)</span><br/>
 									</div>
@@ -354,6 +353,8 @@
 							<button class="btn btn-success" [disabled]="form3.invalid"   type="submit">Enviar </button>
 						</div>
 
+						<pre>{{form3.value|json}}</pre>
+
 				</form>
 				
 			</div>
@@ -368,16 +369,16 @@
 		<div class="modal-dialog modal-dialog-centered"  style="max-width: 50rem;">
 			<div class="modal-content" >
 				<!-- <div id="pdfhtml"> -->
-					<div class="mx-3 mt-3" style="height: 2rem;">
+					<div class="mx-3 mt-3 d-flex justify-content-between align-items-center" style="height: 2rem;">
 						<span style="font-weight: bold; font-size: x-large;">Documento</span>
 
-						<button class="close rounded" (click)="salirExpediente()" style="color: #000; height: 100%;">
+						<button class="close rounded-circle btn btn-secondary" (click)="salirExpediente()" style="color: #000; height: 2rem; width: 2rem;">
 							<i class="fa-solid fa-xmark"></i>
 						</button>
 					</div>
 					<div class="modal-body">
 						<div class="table-responsive">
-							<table class="table table-bordered table-sm">
+							<table class="table table-sm">
 								<thead class="">
 									<tr>
 										<th scope="col" class="table-dark">Expediente</th>

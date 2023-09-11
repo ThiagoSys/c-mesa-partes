@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, HostListener, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
-import { SearchPersonaService } from '../../services/search-persona.service';
+// import { SearchPersonaService } from '../../services/search-persona.service';
 
 // import { faCoffee } from '@fortawesome/free-solid-svg-icons';
 // import { faStar as farStar } from '@fortawesome/free-regular-svg-icons';
@@ -241,7 +241,7 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
     
     private router:Router,
     public fb: FormBuilder,
-    private searchPersona:SearchPersonaService,
+    //private searchPersona:SearchPersonaService,
     private soapTramite: SoaptramiteService,
     library: FaIconLibrary,
 

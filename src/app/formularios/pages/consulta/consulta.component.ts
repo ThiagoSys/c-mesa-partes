@@ -137,11 +137,11 @@ export class ConsultaComponent implements OnInit  {
   }
 
   tipoYear(e:any){
-    console.log(e)
+    // console.log(e)
   }
 
   clicCap(e:any){
-    console.log('REdddd',e)
+    // console.log('REdddd',e)
   }
   
   handleReady(){
@@ -159,13 +159,13 @@ export class ConsultaComponent implements OnInit  {
   }
 
   handleSuccess(data:any){
-    console.log(data)
+    // console.log(data)
   }
 
 
   onRecaptchaResolved(response: string): void {
     // Aquí puedes manejar la respuesta del reCAPTCHA
-    console.log('Recaptcha resolved:', response);
+    // console.log('Recaptcha resolved:', response);
   }
 
   buscarExp(val:any){
@@ -236,7 +236,7 @@ export class ConsultaComponent implements OnInit  {
   }
 
   btn1(){
-    console.log(this.formGroupConsul)
+    // console.log(this.formGroupConsul)
   }
 
   backBtn(){

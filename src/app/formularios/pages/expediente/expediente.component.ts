@@ -677,13 +677,13 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
       // return console.log('CAmpos Errorr f werw er')  
       if(this.nroDocumento.valid&&this.tipoDocumentoP.valid){
         this.cargarFormDoc();
-        console.log('DATA SIN 999999',this.tipoDocumentoP)
+        // console.log('DATA SIN 999999',this.tipoDocumentoP)
         if(tipoDoc_Val==='RUC'){ return this.buscarEmpresa(documento)}
         if(tipoDoc_Val==='DNI'){ return this.buscarPersona(documento)}
 
       }
       else{
-        console.log('DATA SIN 0000',this.tipoDocumentoP)
+        // console.log('DATA SIN 0000',this.tipoDocumentoP)
       }
     }
   }
@@ -705,7 +705,7 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
 
 
     this.soapTramite.getDatosEmpresaSunatXml({documento}).subscribe((resp)=>{
-      console.log('DATA SIN',resp, documento)
+      // console.log('DATA SIN',resp, documento)
       if(resp.message==='Sin datos'){
         // console.log('DATA SIN',resp)
         // this.loading = false;
@@ -782,14 +782,14 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
 
     this.soapTramite.getDatosPersonaReniecXml({documento}).subscribe((resp)=>{
       if(resp.message==='Sin datos'){
-        console.log('DATA SIN',resp)
+        // console.log('DATA SIN',resp)
         // this.loading = false;
         this.closeModalLoading()
 
       }
 
       if(resp.message==='Sin datos que mostrar'){
-        console.log('Registro no encontrado',resp)
+        // console.log('Registro no encontrado',resp)
         this.imagenFoto='';
         // this.loading = false;
         this.closeModalLoading()
@@ -1125,7 +1125,7 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
       this.uploadedDocumentoFiles = (_countFile==0)?"":(_countFile==1?`Archivo ${_countFile}`:`Archivos ${_countFile}`);
 
     } else {
-        console.log('FILE NO ENVIADO', countFile.length);
+        // console.log('FILE NO ENVIADO', countFile.length);
     }
 
     this.formGroupDoc.patchValue({'folios':parseInt(this.fileTmpDoc.length+this.fileTmpAnexo.length)})
@@ -1193,18 +1193,23 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
       tipo: formdoc.tipo,
       usuCreacion: formdoc.usuCreacion,
     }
-
-    // setTimeout(() => {
-    //   // this.loading =false;
-    //   this.closeModalLoading()
-    // }, 7000);
-
+    // console.log(_doc.nombreRemitente)
+    // console.log(formdoc.nombreRemitente)
+    // console.log(_doc)
     this.soapTramite.getDatosDocumentosXml(_doc).subscribe((resp:any)=>{
+      // console.log('MY',resp)
       if(resp.ok&&resp.message==='Documento ingresado'){
         this.enviarPdfDoc(resp.data)
         this.enviarPdfAnexo(resp.data)
         this.obtenerDataDocumento(resp.data)
       }
+      if(resp.ok==false){
+        const toastError = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasError'));
+        this.closeModalLoading();
+        toastError.show();
+        this.toastMsgError = 'Error en el sistema'
+      }
+
     })
   }
 
@@ -1213,7 +1218,6 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
     const _data = { idDoc: idDoc };
     this.soapTramite.getDocumentoIngresadoXml(_data).subscribe((response:any)=>{
       if(response.ok){
-        
         // crea object para mostrar el documento en el modal de la pagina HTML
         const _documento = {
           numeroexpediente: response.data[0].numeroexpediente,
@@ -1227,14 +1231,14 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
           tipoDocumento: response.data[0].flg_persona==='N'?'D.N.I':'R.U.C',
         };
         this.resultDocumento = _documento;
-        // console.log('OK DOCUMENTO', response)
 
         const _enviarDoc = {
           email:(this.formGroupSearch.value.tipoDocumentoP==='DNI')?
-          (this.formGroupPersona.value.correo==''?'fredromeo.001@gmail.com':this.formGroupPersona.value.correo):
-          (this.formGroupEmpresa.value.correoEmp==''?'fredromeo.001@gmail.com':this.formGroupEmpresa.value.correoEmp),
+          (this.formGroupPersona.value.correo==''?'mesadepartesvirtual@municieneguilla.gob.pe':this.formGroupPersona.value.correo):
+          (this.formGroupEmpresa.value.correoEmp==''?'mesadepartesvirtual@municieneguilla.gob.pe':this.formGroupEmpresa.value.correoEmp),
           documento: _documento,
         }
+        // console.log(_enviarDoc)
         // this.openModal()
         this.generarFileJspdf(_data.idDoc, _documento.nroDoc, _enviarDoc );
       }
@@ -1254,7 +1258,7 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
         formularioDeDatos.append('orden', (i+1).toString());
         formularioDeDatos.append('claveDoc', claveDoc);
         this.soapTramite.saveOnePdf(formularioDeDatos).subscribe((resp:any)=>{
-          console.log('PDF DOC', resp)
+          // console.log('PDF DOC', resp)
         })
       }
     }
@@ -1271,7 +1275,7 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
         formularioDeDatos.append('orden', (i+1).toString());
         formularioDeDatos.append('claveDoc', claveDoc);
         this.soapTramite.saveOnePdf(formularioDeDatos).subscribe((resp:any)=>{
-          console.log('PDF ANEXO', resp)
+          // console.log('PDF ANEXO', resp)
         })
       }      
     }
@@ -1356,18 +1360,24 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
           documento:expediente.documento,
           file:resp.data,
         }
+
+            // console.log('OK EMAIL')
+
         this.soapTramite.enviarCorreo(_data).subscribe((resp:any)=>{ 
+          // console.log('OK EMAIL 0000', resp)
+
           if(resp.ok){
+
             this.closeModalLoading()
             //const toastError = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasError'));
             const toastExito = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasExito'));
             toastExito.show();
             this.toastMsgOk='Expediente registrado con exito.'
             this.loading = false;
-            //console.log('OK EMAIL', resp)
             this.openModal();
           }
         })
+
       }
     })
 
@@ -1489,13 +1499,13 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
   }
 
   salirExpediente(){
-    console.log('CERRADO')
+    // console.log('CERRADO')
     this.router.navigateByUrl('')
     //this.closeModal()
   }
 
   backBtn(){
-    console.log('DELETE')
+    // console.log('DELETE')
     // this.router.navigate(['/'])
     this.router.navigateByUrl('')
   }
@@ -1595,24 +1605,5 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
     this.getHeight=window.innerHeight
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // TODO AQUI OTRAS FUNCIONES QUE NO SON USADAS POR REVISAR A BORRARRRRRR
-  getDocumentoIngresado(code:number){
-    return `<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><CargaFiltros xmlns="http://tempuri.org/"><hash_code>${code}</hash_code></CargaFiltros></s:Body></s:Envelope>`;
-  }
 
 }

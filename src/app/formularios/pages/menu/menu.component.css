@@ -98,25 +98,4 @@
   /* transition: ease 3s; */
 }
 
-/* @keyframes my-animation {
-  0% {
-    bottom: 100%;
-    background-color: #ff7a59;
-  }
-  0% {
-    bottom: 50%;
-    background-color: #ff7a59;
-  }
-  100% {
-    bottom: auto;
-    background-color: #460e00;
-
-
-  }
-}
-
-.fr-content-transition-v {
-  top:auto;
-  transition: 4s all;
-} */
 

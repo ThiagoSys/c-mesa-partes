@@ -128,7 +128,7 @@
 							<div class="col-sm-12 col-md-4 mb-0" >
 								<span class="subtitulo">Teléfono <span *ngIf="this.formGroupPersona.get('telefono')?.status==='INVALID'" class="text-danger">(!)</span></span>
 								<input type="text" class="form-control border"  formControlName="telefono" name="telefono" id="telefono" placeholder="Teléfono" (keypress)="restrictNumeric($event)" maxlength="9"  (paste)="onPaste($event)"  ngModel  required>
-								<div *ngIf="telefono.errors?.['invalidPhoneNumber']" class="text-danger">(Debe comenzar con 9 y tener 9 dígitos en total)</div>
+								<div *ngIf="telefono.errors?.['invalidPhoneNumber']" class="text-danger">{{telefono.errors?.['msgError']}}</div>
 							</div>
 								
 							<div class="col-sm-12 col-md-8" >

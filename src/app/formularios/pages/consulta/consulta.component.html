@@ -38,7 +38,7 @@
 	<div style="margin-bottom: 2rem;" class="cf-0">  
 		<div class="container px-2 cuadro-cabecera">
 			<div class="">
-				<div class="col-md-12 col-xs-12 titulo1">MESA DE PARTE VIRTUAL</div>
+				<div class="col-md-12 col-xs-12 titulo1">MESA DE PARTES VIRTUAL</div>
 			</div>
 		</div>
 	</div>
@@ -88,15 +88,14 @@
 								<input name="claveWeb" formControlName="claveWeb"  placeholder="Digite su clave web" id="claveWeb" type="text" class="form-control border" ngModel required (input)="inputClaveWeb($event)" maxlength="10">
 							</div>						
 						</div>
+
 						<div class="col-md-3  pb-3 d-flex justify-content-center align-items-end">
 							<div  class="" style="margin-left: 0px!important; margin-right: 0px!important;">
 								<div class="row " style="margin-left: 0px!important; margin-right: 0px!important;">
 									<button class="btn btn-success" type="submit" [disabled]="!form0.valid">Ingresar</button>
-									<!-- <button class="btn btn-success" type="button" (click)="btn1()">prueba</button> -->
 								</div>
 							</div>
 						</div>
-
 
 					</div>
 
@@ -106,20 +105,25 @@
 	</div>
 
 	<div *ngIf="listExpediente.length!==0" class="container cuadro-blanco" style="padding-left: 0px!important; padding-right: 0px!important;">
+	<!-- <div *ngIf="true" class="container cuadro-blanco" style="padding-left: 0px!important; padding-right: 0px!important;"> -->
 
-		<div *ngIf="listExpediente.length!==0" class="mt-5  ml-3 mr-3">
-			<div class="d-flex justify-content-around">
-				<div class="">
-					<img src="../../../../assets/img/logo-sin-letras.png" alt="" style="height: 5rem; width: 5rem;">
+		<!-- <div *ngIf="listExpediente.length!==0" class="mt-5  ml-3 mr-3"> -->
+		<div *ngIf="true" class="mt-5  ml-3 mr-3">
+			<div class="row row-cols-3">
+				<div class="col-xs-4 d-flex justify-content-center align-items-center">
+					<img src="../../../../assets/img/HORIZONTAL-LETRAS-NEGRAS-2.png" alt="" style="height: 5rem; width: 15rem;">	
 				</div>
-				<div class=" d-flex justify-content-center align-items-center">
+				<div class=" col-xs-4 d-flex justify-content-center align-items-center">
 					<h1 class="fw-bold">HOJA DE RUTA</h1>
 				</div>
-				<div class="">
-					<h4 class="fw-bold"> Nº Expediente</h4>
-					<h4 class="fw-bold">{{this.listExpediente[0]['EXPEDIENTE']}}</h4>
+				<div class="d-flex justify-content-center align-items-center">
+					<div>
+						<h4 class="fw-bold"> Nº Expediente</h4>
+						<h4 class="fw-bold">{{this.listExpediente[0]['EXPEDIENTE']}}</h4>						
+					</div>
 				</div>
 			</div>
+
 			<div class="pb-2 pt-4">
 				<table class="table table-borderless">
 					<tbody>
@@ -218,7 +222,7 @@
 								<span class="">{{ 'En la parte del cuadro de datos esta su numero de expediente.'}}</span><br/><br/>
 								<span class="">{{ 'Si el numero tiene guiones(-), solo ingrese el numero que esta dentro del los guiones.'}}</span><br/><br/>
 							</div>
-							<h4 class="text-center bold">{{ 'Número de expediente es 004462' | uppercase}} <i class="fa-solid fa-check" style="color: #1A984D;"></i></h4>
+							<!-- <h4 class="text-center bold">{{ 'Número de expediente es 004462' | uppercase}} <i class="fa-solid fa-check" style="color: #1A984D;"></i></h4> -->
 						</div>									
 					</div>
 

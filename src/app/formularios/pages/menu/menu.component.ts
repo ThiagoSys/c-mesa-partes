@@ -22,6 +22,9 @@ export class MenuComponent implements OnInit {
       var _subContend:HTMLInputElement = (<HTMLInputElement>document.getElementById('subContend'));
 
       _subMenu.classList.add('d-none');
+      _subMenu.classList.remove('d-flex');
+      _subMenu.classList.remove('justify-content-center');
+      _subMenu.classList.remove('align-items-center');
       _subMenuFoo.classList.remove('d-none');
 
       _subContend.classList.remove('h-100');
@@ -37,8 +40,21 @@ export class MenuComponent implements OnInit {
       _subContend.classList.add('h-100');
       _subContend.classList.remove('h-75');
 
+      this.scrollcenter(this.getHeight)
+    }
 
+  }
 
+  scrollcenter(valHeight:number){
+    var _subMenu:HTMLInputElement = (<HTMLInputElement>document.getElementById('subMenu'));
+    if(valHeight<610){
+      _subMenu.classList.remove('d-flex');
+      _subMenu.classList.remove('justify-content-center');
+      _subMenu.classList.remove('align-items-center');
+    } else{
+      _subMenu.classList.add('d-flex');
+      _subMenu.classList.add('justify-content-center');
+      _subMenu.classList.add('align-items-center');
     }
   }
 
@@ -48,17 +64,18 @@ export class MenuComponent implements OnInit {
   onWindowsResize(){
     this.getWidth=window.innerWidth
     this.getHeight=window.innerHeight
-    // console.log(this.getWidth,this.getHeight)
     if(this.getWidth<768){
       var _subMenu:HTMLInputElement = (<HTMLInputElement>document.getElementById('subMenu'));
       var _subMenuFoo:HTMLInputElement = (<HTMLInputElement>document.getElementById('subMenuFooter'));
       var _subContend:HTMLInputElement = (<HTMLInputElement>document.getElementById('subContend'));
       _subMenu.classList.add('d-none');
+      _subMenu.classList.remove('d-flex');
+      _subMenu.classList.remove('justify-content-center');
+      _subMenu.classList.remove('align-items-center');
       _subMenuFoo.classList.remove('d-none');
 
       _subContend.classList.remove('h-100');
       _subContend.classList.add('h-75');
-
     } else{
       var _subMenu:HTMLInputElement = (<HTMLInputElement>document.getElementById('subMenu'));
       var _subMenuFoo:HTMLInputElement = (<HTMLInputElement>document.getElementById('subMenuFooter'));
@@ -69,8 +86,9 @@ export class MenuComponent implements OnInit {
 
       _subContend.classList.add('h-100');
       _subContend.classList.remove('h-75');
-
+      this.scrollcenter(this.getHeight)
     }
+
   }
 
 }

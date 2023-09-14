@@ -34,14 +34,6 @@ declare var bootstrap: any;
 
 declare var $: any;
 
-
-function phoneNumberValidator(control: FormControl): { [key: string]: boolean } | null {
-  const value = control.value;
-  if (value && !/^9\d{8}$/.test(value)) {  return { 'invalidPhoneNumber': true }; }
-  return null;
-}
-
-
 @Component({
   selector: 'app-expediente',
   templateUrl: './expediente.component.html',
@@ -153,18 +145,13 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
   public searchActive : boolean = true;
 
 
+  // public errorMsg0: string = '(Seleccione un campo)';
+  // public errorMsg1: string = '(No puede quedar vacio)';
+  // public errorMsg2: string = '(Ingrese correctamente el DNI)';
+  // public errorMsg3: string = '(Ingrese correctamente el RUC)';
+  // public errorMsg4: string = '(Ingrese correctamente el Carnet de extranjería)';
+  // public errorMsg5: string = '(Ingrese correctamente el Pasaporte)';
 
-  // public errorTipoPersona: boolean = false;
-  // public errorTipoDocumentoP: boolean = false;
-  // public errorNroDocumento: boolean = false;
-  // public errorNroDocumentoDigito: boolean = false;
-
-  public errorMsg0: string = '(Seleccione un campo)';
-  public errorMsg1: string = '(No puede quedar vacio)';
-  public errorMsg2: string = '(Ingrese correctamente el DNI)';
-  public errorMsg3: string = '(Ingrese correctamente el RUC)';
-  public errorMsg4: string = '(Ingrese correctamente el Carnet de extranjería)';
-  public errorMsg5: string = '(Ingrese correctamente el Pasaporte)';
 
   public errorMsgTipoPersona: string = '';
   public errorMsgTipoDocumentoP: string = '';
@@ -186,7 +173,7 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
   public paterno: FormControl = new FormControl('', Validators.required);
   public materno: FormControl = new FormControl('', Validators.required);
   public nombres: FormControl = new FormControl('', Validators.required);
-  public telefono: FormControl = new FormControl('', [Validators.required, phoneNumberValidator]);
+  public telefono: FormControl = new FormControl('', [Validators.required, this.phoneNumberValidator]);
   public correo: FormControl = new FormControl('',  [Validators.required, Validators.email]);
   public direccion: FormControl = new FormControl('', Validators.required);
   public photo: FormControl = new FormControl('', Validators.required);
@@ -194,7 +181,7 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
   // TODO Form Empresa
   // public tipoPersonaEmp: FormControl = new FormControl( '',Validators.required);
   public correoEmp: FormControl = new FormControl('',  [Validators.required, Validators.email]);
-  public telefonoEmp: FormControl = new FormControl('', [Validators.required, phoneNumberValidator]);
+  public telefonoEmp: FormControl = new FormControl('', [Validators.required, this.phoneNumberValidator]);
   public departamento: FormControl = new FormControl('', Validators.required);
   public provincia: FormControl = new FormControl('', Validators.required);
   public distrito: FormControl = new FormControl('', Validators.required);
@@ -354,6 +341,23 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
     $('[data-bs-toggle="tooltip"]').tooltip();
   }
 
+
+
+  phoneNumberValidator(control: FormControl): { [key: string]: boolean | string } | null {
+    const value = control.value;
+    if(value !== null&&value!==''){
+      if(value[0]=='9'){ 
+        if (value && !/^9\d{8}$/.test(value)) {  return { 'invalidPhoneNumber': true, 'msgError':'Debe comenzar con 9 y tener 9 dÍgitos'}; }
+      }
+      if(value[0]=='0'){
+        if (value && !/^(0[1])\d{7}$/.test(value)) {  return { 'invalidPhoneNumber': true, 'msgError':'(Debe comenzar con 01 y tener 9 dígitos)' }; }
+      }
+      if(value[0]!=='0'&&value[0]!=='9'){
+        return { 'invalidPhoneNumber': true, 'msgError':'(Número no valido)' };
+      }
+    }
+    return null;
+  }
 
 
   cargarFormDoc(){
@@ -660,16 +664,16 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
     else if ( nroDoc_Val.length !== 11  && tipoDoc_Val == 'RUC'){
       // this.errorNroDocumento=false;
       // this.errorNroDocumentoDigito=true;
-      this.errorMsgNroDocumento=this.errorMsg3;
+      // this.errorMsgNroDocumento=this.errorMsg3;
     }else if ((nroDoc_Val.length !== 12  && tipoDoc_Val =='Carnet de extranjería') ){
       // this.errorNroDocumento=false;
       // this.errorNroDocumentoDigito=true;
-      this.errorMsgNroDocumento=this.errorMsg4;
+      // this.errorMsgNroDocumento=this.errorMsg4;
     } 
     else if ((nroDoc_Val.length !== 12 && tipoDoc_Val =='Pasaporte') ){
       // this.errorNroDocumento=false;
       // this.errorNroDocumentoDigito=true;
-      this.errorMsgNroDocumento=this.errorMsg5;
+      // this.errorMsgNroDocumento=this.errorMsg5;
     }
     else{
       // this.errorNroDocumento=false;

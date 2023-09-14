@@ -34,7 +34,7 @@
 	<div style="margin-bottom: 2rem;" class="cf-0">  
 		<div class="container px-2 cuadro-cabecera">
 			<div class="">
-				<div class="col-md-12 col-xs-12 titulo1">MESA DE PARTE VIRTUAL</div>
+				<div class="col-md-12 col-xs-12 titulo1">MESA DE PARTES VIRTUAL</div>
 			</div>
 		</div>
 	</div>
@@ -82,7 +82,7 @@
 
 						<div class="col-sm-12 col-md-3 mb-4">
 							<span class="subtitulo">Nº de documento <span *ngIf="this.searchActive" class="text-danger">(!)</span></span>
-							<input name="nroDocumento" formControlName="nroDocumento"  placeholder="Documento" id="nroDocumento" type="text" class="form-control border"  (keypress)="restrictNumeric($event)" (input)="inputCulminado($event)" ngModel required>
+							<input name="nroDocumento" formControlName="nroDocumento"  placeholder="Documento" id="nroDocumento" type="text" class="form-control border"  (keypress)="restrictNumeric($event)" (input)="inputCulminado($event)" (paste)="onPaste($event)" ngModel required>
 						</div>
 
 						<div class="col-sm-12 col-md-3 mb-4 row justify-content-center align-items-end" style="margin-left: 0px!important; margin-right: 0px!important;">
@@ -126,7 +126,7 @@
 
 						<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
 							<div class="col-sm-12 col-md-4 mb-0" >
-								<span class="subtitulo">Teléfono <span *ngIf="this.formGroupPersona.get('telefono')?.status==='INVALID'" class="text-danger">(!)</span></span>
+								<span class="subtitulo">Teléfono celular o fijo <span *ngIf="this.formGroupPersona.get('telefono')?.status==='INVALID'" class="text-danger">(!)</span></span>
 								<input type="text" class="form-control border"  formControlName="telefono" name="telefono" id="telefono" placeholder="Teléfono" (keypress)="restrictNumeric($event)" maxlength="9"  (paste)="onPaste($event)"  ngModel  required>
 								<div *ngIf="telefono.errors?.['invalidPhoneNumber']" class="text-danger">{{telefono.errors?.['msgError']}}</div>
 							</div>
@@ -191,9 +191,9 @@
 
 						<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
 							<div class="col-sm-12 col-md-4 mb-0" >
-								<span class="subtitulo">Teléfono <span *ngIf="this.formGroupEmpresa.get('telefonoEmp')?.status==='INVALID'" class="text-danger">(!)</span></span>
+								<span class="subtitulo">Teléfono celular o fijo <span *ngIf="this.formGroupEmpresa.get('telefonoEmp')?.status==='INVALID'" class="text-danger">(!)</span></span>
 								<input type="text" class="form-control border"  formControlName="telefonoEmp" name="telefonoEmp" id="telefonoEmp" placeholder="Teléfono" (change)="telefonoEmpchange($event)" (paste)="onPaste($event)"  (keypress)="restrictNumeric($event)" maxlength="9"  ngModel  required>
-								<div *ngIf="telefonoEmp.errors?.['invalidPhoneNumber']" class="text-danger">(Debe comenzar con 9 y tener 9 dígitos en total)</div>
+								<div *ngIf="telefonoEmp.errors?.['invalidPhoneNumber']" class="text-danger">{{telefonoEmp.errors?.['msgError']}}</div>
 							</div>
 							
 							<div class="col-sm-12 col-md-8 mb-0" >
@@ -243,7 +243,7 @@
 						<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
 							<div class="col-md-12 mb-0">
 								<span class="subtitulo">Nombre remitente <span *ngIf="this.formGroupDoc.get('nombreRemitente')?.status==='INVALID'" class="text-danger">(!)</span></span>
-								<input  type="text" class="form-control border" formControlName="nombreRemitente" name="nombreRemitente" id="nombreRemitente" placeholder="Nombre remitente" (keypress)="inputFilter($event)" ngModel required>
+								<input  type="text" class="form-control border" formControlName="nombreRemitente" name="nombreRemitente" id="nombreRemitente" placeholder="Nombre remitente" (paste)="onPaste($event)" (keypress)="inputFilter($event)"  ngModel required maxlength="200">
 							</div>
 						</div>
 
@@ -270,7 +270,7 @@
 						<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
 							<div class="col-md-12 mb-0">
 								<span class="subtitulo">Asunto <span *ngIf="this.formGroupDoc.get('asunto')?.status==='INVALID'" class="text-danger">(!)</span></span>
-								<input  type="text" class="form-control border" formControlName="asunto" name="asunto" id="asunto" placeholder="Asunto" (input)="inputDocMayu($event,'asunto')" ngModel required>
+								<input  type="text" class="form-control border" formControlName="asunto" name="asunto" id="asunto" placeholder="Asunto" (keypress)="inputFilterAsunto($event)"  (paste)="onPaste($event)" (input)="inputDocMayu($event,'asunto')" maxlength="100" ngModel required>
 							</div>
 						</div>
 
@@ -345,7 +345,7 @@
 						<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
 							<div class="col-md-12">
 								<span class="subtitulo">Observaciones</span>
-								<input  type="text" class="form-control border" formControlName="observaciones" name="observaciones" id="observaciones" placeholder="Observaciones" (input)="inputDocMayu($event,'observaciones')" ngModel>
+								<input  type="text" class="form-control border" formControlName="observaciones" name="observaciones" id="observaciones" placeholder="Observaciones" (keypress)="inputFilterObs($event)"  (paste)="onPaste($event)" (input)="inputDocMayu($event,'observaciones')"  maxlength="300" ngModel>
 							</div>
 						</div>
 

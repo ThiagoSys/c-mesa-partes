@@ -322,6 +322,7 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
 
     this.myFunction(this.nroDocumento);
+
     this.soapTramite.getDocumentosXml().subscribe((resp:any)=>{
       this.selectTipoDocCie = resp.data
     })
@@ -347,10 +348,10 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
     const value = control.value;
     if(value !== null&&value!==''){
       if(value[0]=='9'){ 
-        if (value && !/^9\d{8}$/.test(value)) {  return { 'invalidPhoneNumber': true, 'msgError':'Debe comenzar con 9 y tener 9 dÍgitos'}; }
+        if (value && !/^9\d{8}$/.test(value)) {  return { 'invalidPhoneNumber': true, 'msgError':'Si es celular comenzar con 9 y tener 9 dÍgitos'}; }
       }
       if(value[0]=='0'){
-        if (value && !/^(0[1])\d{7}$/.test(value)) {  return { 'invalidPhoneNumber': true, 'msgError':'(Debe comenzar con 01 y tener 9 dígitos)' }; }
+        if (value && !/^(0[1])\d{7}$/.test(value)) {  return { 'invalidPhoneNumber': true, 'msgError':'(Si es fijo colocar 01 antes del número)' }; }
       }
       if(value[0]!=='0'&&value[0]!=='9'){
         return { 'invalidPhoneNumber': true, 'msgError':'(Número no valido)' };
@@ -423,18 +424,12 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
 
 
   myFunction(rule:any){
-    //console.log('ROLLL0000', rule)
     let item1 = (<HTMLInputElement>document.getElementById('nroDocumento'))
-    let item = (<HTMLInputElement>document.getElementById('nroDocumento')).value
-    let element3 = (<HTMLInputElement>document.getElementById('tipoDocumentoP'))
  
-     let tipoDocumentoP = (<HTMLInputElement>document.getElementById('tipoDocumentoP')).value
-
+    let tipoDocumentoP = (<HTMLInputElement>document.getElementById('tipoDocumentoP')).value
     rule  = tipoDocumentoP
 
     this.searchActive=true;
-    
-  
    
     switch (rule) {
       case "RUC":
@@ -525,7 +520,6 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
 
     let htmlDoc = (<HTMLInputElement>document.getElementById('nroDocumento'))
     let docLength =  this.formGroupSearch.value.nroDocumento;
-    // console.log(htmlDoc.maxLength, docLength.length)
     if(htmlDoc.maxLength===docLength.length){ this.searchActive=false }
     else{ this.searchActive=true }
 
@@ -536,6 +530,24 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
    async inputFilter(event: any) {
     // const pattern = /[0-9-,/°#+*¿¡!?]/;
     const pattern = /^[A-Za-z\s]+$/;
+    let inputChar = String.fromCharCode(event.charCode);
+    if (!pattern.test(inputChar)) {
+      event.preventDefault();
+    }
+  }
+
+  async inputFilterAsunto(event: any) {
+    // const pattern = /[0-9-,/°#+*¿¡!?]/;
+    const pattern = /^[A-Za-z0-9\s.]+$/;
+    let inputChar = String.fromCharCode(event.charCode);
+    if (!pattern.test(inputChar)) {
+      event.preventDefault();
+    }
+  }
+
+  async inputFilterObs(event: any) {
+    // const pattern = /[0-9-,/°#+*¿¡!?]/;
+    const pattern = /^[A-Za-z0-9\s.,;:?¿!¡]+$/;
     let inputChar = String.fromCharCode(event.charCode);
     if (!pattern.test(inputChar)) {
       event.preventDefault();
@@ -984,16 +996,30 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
     var tipo_pe:HTMLInputElement = (<HTMLInputElement>document.getElementById('tipoPersonaSea'));
     var tipo_do:HTMLInputElement = (<HTMLInputElement>document.getElementById('tipoDocumentoP'));
     var nro_doc:HTMLInputElement = (<HTMLInputElement>document.getElementById('nroDocumento'));
+
+    nro_doc.maxLength = 0
+    //nro_doc.value= ""
+
     tipo_pe.disabled = false;
     tipo_do.disabled = false;
     nro_doc.disabled = false;
 
+    this.dni=false;
+    this.razon_social=false;
+
     this.btnBuscar = true;
     this.btnPersona = true;
     this.btnEmpresa = true;
+    this.searchActive = true;
+
     this.formGroupEmpresa.reset()
     this.formGroupPersona.reset()
     this.formGroupDoc.reset()
+
+    this.formGroupSearch.get('tipoPersonaSea')?.setValue('');
+    this.formGroupSearch.get('tipoDocumentoP')?.setValue('');
+    this.formGroupSearch.get('nroDocumento')?.setValue('');
+
 
     if(this.formGroupSearch.value.tipoDocumentoP==="DNI"){
       var _paterno:HTMLInputElement = (<HTMLInputElement>document.getElementById('paterno'));

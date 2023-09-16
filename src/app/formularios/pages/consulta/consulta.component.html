@@ -76,7 +76,7 @@
 							<div class="" style="margin-left: 0px!important; margin-right: 0px!important;">
 								<span class="subtitulo">Nro expediente </span>
 								<div class="input-group">
-									<input name="nroExpediente" formControlName="nroExpediente"  placeholder="Digite su expediente" id="nroExpediente" type="text" class="form-control border" ngModel required (ngModelChange)="changeExp($event)" maxlength="10">
+									<input name="nroExpediente" formControlName="nroExpediente"  placeholder="Digite su expediente" id="nroExpediente" type="text" class="form-control border" ngModel required (ngModelChange)="changeExp($event)" maxlength="6" (keypress)="inputFilterExp($event)">
 									<button class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04" (click)="helpExp()"><i class="fa-solid fa-circle-info"></i></button>
 								</div>
 								<span class="pl-2 text-danger" *ngIf="errorLength!==null">Debe ser 6 digitos</span>
@@ -85,7 +85,7 @@
 						<div class="col-md-3 pb-3">
 							<div  class="" style="margin-left: 0px!important; margin-right: 0px!important;">
 								<span class="subtitulo">Clave web</span>
-								<input name="claveWeb" formControlName="claveWeb"  placeholder="Digite su clave web" id="claveWeb" type="text" class="form-control border" ngModel required (input)="inputClaveWeb($event)" maxlength="10">
+								<input name="claveWeb" formControlName="claveWeb"  placeholder="Digite su clave web" id="claveWeb" type="text" class="form-control border" ngModel required (input)="inputClaveWeb($event)" (keypress)="inputFilterCW($event)" maxlength="10">
 							</div>						
 						</div>
 
@@ -111,7 +111,7 @@
 		<div *ngIf="true" class="mt-5  ml-3 mr-3">
 			<div class="row row-cols-3">
 				<div class="col-xs-4 d-flex justify-content-center align-items-center">
-					<img src="../../../../assets/img/HORIZONTAL-LETRAS-NEGRAS-2.png" alt="" style="height: 5rem; width: 15rem;">	
+					<img src="../TramiteVirtual/assets/img/HORIZONTAL-LETRAS-NEGRAS-2.png" alt="" style="height: 5rem; width: 15rem;">	
 				</div>
 				<div class=" col-xs-4 d-flex justify-content-center align-items-center">
 					<h1 class="fw-bold">HOJA DE RUTA</h1>
@@ -215,7 +215,7 @@
 					<div class="modal-body">
 						<div class="">
 							<div class="d-flex justify-content-center align-items-center">
-								<img src="../../../../assets/img/help-exp.png" alt="">
+								<img src="../TramiteVirtual/assets/img/help-exp.png" alt="">
 							</div><br/>
 							<h4 class="text-center">{{ 'Este es su numero de expediente' | uppercase}}</h4>
 							<div class="text-center">

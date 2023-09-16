@@ -113,6 +113,22 @@ export class ConsultaComponent implements OnInit  {
     this.selectTipoYear =  _list;
   }
 
+  async inputFilterExp(event: any) {
+    const pattern = /^[0-9]+$/;
+    let inputChar = String.fromCharCode(event.charCode);
+    if (!pattern.test(inputChar)) {
+      event.preventDefault();
+    }
+  }
+
+  async inputFilterCW(event: any) {
+    const pattern = /^[A-Za-z0-9]+$/;
+    let inputChar = String.fromCharCode(event.charCode);
+    if (!pattern.test(inputChar)) {
+      event.preventDefault();
+    }
+  }
+
   obtenerListaDeAnios(desdeFecha:Date) {
     const fechaActual = new Date();
     const anioActual = fechaActual.getFullYear();
@@ -128,6 +144,7 @@ export class ConsultaComponent implements OnInit  {
       listaDeAnios.push(_listYear);
       fecha.setFullYear(fecha.getFullYear() + 1);
     }
+    listaDeAnios.sort((a:any,b:any)=>{return b.year -a.year})
     return listaDeAnios;
   }
 

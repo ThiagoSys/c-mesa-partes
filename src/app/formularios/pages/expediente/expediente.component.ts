@@ -1359,7 +1359,7 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
     doc.text("Según el Numeral 6 del Art. 113 de la Ley 27444", (_width/2), (_height/2+185), {align:'center'}) 
 
     var logo = new Image();
-    logo.src = "../TramiteVirtual/assets/img/logo-sin-letras.png";
+    logo.src = "../../../../../assets/img/logo-sin-letras.png";
     doc.addImage(logo, 'PNG', ((_width/2)-30), (_height/2), 50, 60);
 
     autoTable(doc, {
@@ -1459,7 +1459,7 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
     doc.text("Según el Numeral 6 del Art. 113 de la Ley 27444", (_width/2), (_height/2+185), {align:'center'}) 
 
     var logo = new Image();
-    logo.src = "../TramiteVirtual/assets/img/logo-sin-letras.png";
+    logo.src = "../../../../../assets/img/logo-sin-letras.png";
     doc.addImage(logo, 'PNG', ((_width/2)-30), (_height/2), 50, 60);
 
     autoTable(doc, {

@@ -45,12 +45,14 @@ interface propsExpdiente {
 export class ConsultaComponent implements OnInit  {
 
   @ViewChild('toastTrigger') toastTrigger!: ElementRef;
+  // @ViewChild('titulo') toastTrigger!: ElementRef;
   // public robot:boolean=true;
 
   public getWidth:any;
   public getHeight:any;
 
   public loading: boolean = false;
+  public showImg: boolean = true;
 
   // Metodos del captcha, revisar los parametros si se borran o se agrega el captcha 
   @ViewChild('captchaElem') captchaElem!: ReCaptcha2Component;
@@ -111,6 +113,7 @@ export class ConsultaComponent implements OnInit  {
     const fechaInicial = new Date('2010-01-01'); // Cambia esta fecha a la fecha deseada
     const _list = this.obtenerListaDeAnios(fechaInicial);
     this.selectTipoYear =  _list;
+
   }
 
   async inputFilterExp(event: any) {
@@ -134,8 +137,13 @@ export class ConsultaComponent implements OnInit  {
     const anioActual = fechaActual.getFullYear();
     const listaDeAnios = [];
 
-    let fecha = new Date(desdeFecha);
+    if( this.getWidth< 750){
+      this.showImg = false;
+    }else{
+      this.showImg = true;
+    }
 
+    let fecha = new Date(desdeFecha);
     while (fecha.getFullYear() <= anioActual) {
       const _listYear = {
         id:this.obtenerTresUltimosDigitos(fecha.getFullYear()),
@@ -188,7 +196,19 @@ export class ConsultaComponent implements OnInit  {
   buscarExp(val:any){
     this.loading=true;
     this.consularExpediente(val)
+    // const tituloExpElement = this.tituloExp.nativeElement;
+    // tituloExpElement.innerHTML = '<h4 class="fw-bold">New Content</h4>';
+  }
 
+  expSimplificado(val:String){
+    const partes = val.split("-");
+    if (partes.length === 3) {
+      const resultado = partes[1]; // Obtenemos la parte en el índice 1
+      return resultado
+    } else {
+      console.log("Formato de texto no válido");
+      return ''
+    }
   }
 
   consularExpediente(exp:any){
@@ -317,13 +337,15 @@ export class ConsultaComponent implements OnInit  {
     return `${diasDeDiferencia}`
   }
 
-
-
-
     @HostListener('window:resize', ['$event'])
     onWindowsResize(){
-      this.getWidth=window.innerWidth
-      this.getHeight=window.innerHeight
-    }
+      this.getWidth=window.innerWidth;
+      this.getHeight=window.innerHeight;
 
+      if( this.getWidth< 750){
+        this.showImg = false;
+      }else{
+        this.showImg = true;
+      }
+    }
 }

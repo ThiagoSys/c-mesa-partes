@@ -1243,6 +1243,17 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
     })
   }
 
+  expSimplificado(val:string){
+    const partes = val.split("-");
+    if (partes.length === 3) {
+      const resultado = partes[1]; // Obtenemos la parte en el índice 1
+      return resultado
+    } else {
+      console.log("Formato de texto no válido");
+      return ''
+    }
+  }
+
  // TODO AQUI PARA OBTENER LOS DATOS DEL DOCUMENTO REGISTRADO
   obtenerDataDocumento(idDoc:string){
     const _data = { idDoc: idDoc };
@@ -1250,7 +1261,7 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
       if(response.ok){
         // crea object para mostrar el documento en el modal de la pagina HTML
         const _documento = {
-          numeroexpediente: response.data[0].numeroexpediente,
+          numeroexpediente: this.expSimplificado(response.data[0].numeroexpediente),
           clave_web: response.data[0].clave_web,
           remitente: response.data[0].remitente,
           fec_recepcion: response.data[0].fec_recepcion,

@@ -109,20 +109,38 @@
 
 		<!-- <div *ngIf="listExpediente.length!==0" class="mt-5  ml-3 mr-3"> -->
 		<div *ngIf="true" class="mt-5  ml-3 mr-3">
-			<div class="row row-cols-3">
+			<div class="row row-cols-3" *ngIf="showImg; else noImage">
 				<div class="col-xs-4 d-flex justify-content-center align-items-center">
 					<img src="../TramiteVirtual/assets/img/HORIZONTAL-LETRAS-NEGRAS-2.png" alt="" style="height: 5rem; width: 15rem;">	
 				</div>
 				<div class=" col-xs-4 d-flex justify-content-center align-items-center">
-					<h1 class="fw-bold">HOJA DE RUTA</h1>
+					<h1 class="fw-bold text-black text-center">HOJA DE RUTA</h1>
 				</div>
 				<div class="d-flex justify-content-center align-items-center">
 					<div>
-						<h4 class="fw-bold"> Nº Expediente</h4>
-						<h4 class="fw-bold">{{this.listExpediente[0]['EXPEDIENTE']}}</h4>						
+						<h4 class="fw-bold">Nº Expediente</h4>
+						<h4 class="fw-bold">{{this.expSimplificado(this.listExpediente[0]['EXPEDIENTE'])}}</h4>					
 					</div>
 				</div>
 			</div>
+
+			<ng-template #noImage>
+				<div class="row row-cols-3" >
+					<div class="col-xs-4 d-flex justify-content-center align-items-center">
+						<img src="../TramiteVirtual/assets/img/VERTICAL_LETRAS_NEGRAS.png" alt="" style="height: 5.251rem; width:3.750rem ;">	
+					</div>
+					<div class=" col-xs-4 d-flex justify-content-center align-items-center">
+						<h4 class="fw-bold text-black text-center">HOJA DE RUTA</h4>
+					</div>
+					<div class="d-flex justify-content-center align-items-center">
+						<div>
+							<h5 class="fw-bold">Nº Expediente</h5>
+							<h5 class="fw-bold">{{ this.expSimplificado(this.listExpediente[0]['EXPEDIENTE'])}}</h5>					
+						</div>
+					</div>
+				</div>				
+			</ng-template>
+
 
 			<div class="pb-2 pt-4">
 				<table class="table table-borderless">
@@ -192,13 +210,6 @@
 	<div class="pb-4 pt-4">
 
 	</div>
-
-
-
-
-
-
-
 
 
 	<div id="myModal" class="modal" tabindex="-1" role="dialog" style="--bs-bg-opacity: .4;background-color: rgba(var(--bs-dark-rgb), var(--bs-bg-opacity)) !important;">

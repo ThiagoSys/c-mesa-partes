@@ -109,7 +109,12 @@
 									</div>
 								</div>
 							</div>
-						</div>								
+
+							<div class="row">
+								<div><button type="button" class="btn btn-link text-white" (click)="openModal()">Ver video 1</button></div>
+								<div><button type="button" class="btn btn-link text-white" (click)="openModal1()">Ver video 2</button></div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -177,6 +182,25 @@
 			
 		</div>
 
-	<!-- </div> -->
+	<div id="myModal" class="modal" tabindex="-1" role="dialog" style="--bs-bg-opacity: .4;background-color: rgba(var(--bs-dark-rgb), var(--bs-bg-opacity)) !important;">
+		<div class="modal-dialog modal-dialog-centered" >
+			<div class="modal-content" >
+				<div class="modal-body">
+					<app-videoplayer [funcionExterna]="closeModal" [valorDesdePadre]="uri1"></app-videoplayer>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	
+	<div id="myModal1" class="modal" tabindex="-1" role="dialog" style="--bs-bg-opacity: .4;background-color: rgba(var(--bs-dark-rgb), var(--bs-bg-opacity)) !important;">
+		<div class="modal-dialog modal-dialog-centered" >
+			<div class="modal-content" >
+				<div class="modal-body">
+					<app-videoplayer [funcionExterna]="closeModal1" [valorDesdePadre]="uri2"></app-videoplayer>
+				</div>
+			</div>
+		</div>
+	</div>
 
 </div>

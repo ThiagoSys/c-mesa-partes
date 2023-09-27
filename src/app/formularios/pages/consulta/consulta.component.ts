@@ -2,8 +2,8 @@ import { Component, ElementRef, ViewChild, OnInit, AfterViewInit, HostListener }
 import { Form, FormBuilder, FormControl, FormGroup, MaxLengthValidator, Validators } from '@angular/forms';
 
 import { MessageService } from '../../services/message.service';
-import { ReCaptcha2Component } from 'ngx-captcha';
-import { ReCaptchaV3Service } from 'ngx-captcha';
+//import { ReCaptcha2Component } from 'ngx-captcha';
+//import { ReCaptchaV3Service } from 'ngx-captcha';
 import { SoaptramiteService } from '../../services/soaptramite.service';
 import { Router } from '@angular/router';
 
@@ -55,7 +55,7 @@ export class ConsultaComponent implements OnInit  {
   public showImg: boolean = true;
 
   // Metodos del captcha, revisar los parametros si se borran o se agrega el captcha 
-  @ViewChild('captchaElem') captchaElem!: ReCaptcha2Component;
+  //@ViewChild('captchaElem') captchaElem!: ReCaptcha2Component;
   @ViewChild('langInput') langInput!: ElementRef;
   public recaptchaSiteKey: string = '6LdxFMgnAAAAADUqMRQQ-Zzg3cMDH1PC70R3r7ou';
   public captchaIsLoad = false;
@@ -91,7 +91,7 @@ export class ConsultaComponent implements OnInit  {
     private router : Router,
     public fb: FormBuilder,
     private messageService: MessageService,
-    private reCaptchaV3Service: ReCaptchaV3Service,
+    //private reCaptchaV3Service: ReCaptchaV3Service,
     private soapTramite: SoaptramiteService,
   ){
     this.formGroupConsul = this.fb.group({

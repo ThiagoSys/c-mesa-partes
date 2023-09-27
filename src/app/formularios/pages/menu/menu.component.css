@@ -62,7 +62,7 @@
 
 
 .img-fondo {
-  background-image: url('../../../../../assets/img/cieneguilla.jpg');
+  background-image: url('../../../../assets/img/cieneguilla.jpg');
   background-size: cover;
   background-position: center;
 }
@@ -97,5 +97,20 @@
   /* background-color: #ff7a59; */
   /* transition: ease 3s; */
 }
+
+.btn-link:hover{
+	color: rgb(18, 217, 252)!important;
+}
+
+
+
+
+
+
+
+
+
+
+
 
 

@@ -7,10 +7,14 @@ import { Component, HostListener, OnInit } from '@angular/core';
 })
 export class MenuComponent implements OnInit {
 
+
   public getWidth:any;
   public getHeight:any;
 
   constructor(){}
+
+  public uri1 : string = './../../../../assets/vidio/video1.mp4'
+  public uri2 : string = './../../../../assets/vidio/video2.mp4'
 
   ngOnInit() {
     this.getWidth = window.innerWidth
@@ -43,6 +47,8 @@ export class MenuComponent implements OnInit {
       this.scrollcenter(this.getHeight)
     }
 
+    // this.openModal()
+
   }
 
   scrollcenter(valHeight:number){
@@ -57,8 +63,6 @@ export class MenuComponent implements OnInit {
       _subMenu.classList.add('align-items-center');
     }
   }
-
-
   
   @HostListener('window:resize', ['$event'])
   onWindowsResize(){
@@ -91,4 +95,27 @@ export class MenuComponent implements OnInit {
 
   }
 
+    // TODO AQUI MODAL OPEN Y CLOSE
+
+    openModal() {
+      var _modal:HTMLInputElement = (<HTMLInputElement>document.getElementById('myModal'));
+      if(_modal!=null){ _modal.style.display = 'block' }
+    }
+    closeModal(){
+      var _modal:HTMLInputElement = (<HTMLInputElement>document.getElementById('myModal'));
+      if(_modal!=null){ _modal.style.display = 'none' }
+    }
+
+
+    // TODO AQUI MODAL OPEN Y CLOSE
+
+    openModal1() {
+      var _modal:HTMLInputElement = (<HTMLInputElement>document.getElementById('myModal1'));
+      if(_modal!=null){ _modal.style.display = 'block' }
+    }
+    closeModal1(){
+      var _modal:HTMLInputElement = (<HTMLInputElement>document.getElementById('myModal1'));
+      if(_modal!=null){ _modal.style.display = 'none' }
+    }
+    
 }

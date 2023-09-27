@@ -1,0 +1,24 @@
+<div class="image-video-wrp">
+    <figure>
+		<div class="ratio ratio-16x9">
+			<video #videoElement width="100%" height="100%" class="rounded">
+				<source [src]="valorDesdePadre" type="video/mp4">
+			</video>
+		</div>
+		<div class=" w-100 h-100 position-absolute controls" style="z-index: 10; top: 0;">
+			<div class="play-icon-box">
+				<div (click)="changeImg()" class="h-100 w-100 d-flex justify-content-center align-items-center" style="border-radius: 100%;">
+					<i *ngIf="play=='Play'" class="fa-solid fa-play"></i>
+					<i *ngIf="play=='Pause'" class="fa-solid fa-pause"></i>
+				</div>
+			</div>
+		</div>
+    </figure>
+
+	<div class="py-2 mt-2 d-flex justify-content-center">
+		<div (click)="cerrarModal()">
+			<i class="fa-solid fa-circle-xmark fa-2xl"></i>
+		</div>
+	</div>
+
+</div>

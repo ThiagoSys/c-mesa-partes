@@ -1,0 +1,31 @@
+.image-video-wrp figure {
+    position: relative;
+    margin: 0;
+}
+
+.play-icon-box {
+    position: absolute;
+    right: 15px;
+    bottom: 5px;
+    width: 30px;
+    height: 30px;
+    border-radius: 100%;
+    background-color: #ffffff;
+    box-shadow: 0px 3px 6px #00000029;
+    z-index: 10;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    /* padding: 5px; */
+}
+
+.controls:hover .play-icon-box{
+	transition: 1s;
+	display: flex;
+}
+
+.play-icon-box img {
+    position: relative;
+    left: 2px;
+}

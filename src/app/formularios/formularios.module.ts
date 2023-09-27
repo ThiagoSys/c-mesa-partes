@@ -15,12 +15,12 @@ import { ExpedienteComponent } from './pages/expediente/expediente.component';
 import { ConsultaComponent } from './pages/consulta/consulta.component';
 import { MenuComponent } from './pages/menu/menu.component';
 
+import { VideoplayerComponent} from './pages/videoplayer/videoplayer.component'
+
 // import { BsStepperModule } from 'bs-stepper';
 // import { StepperModule } from 'bs-stepper/dist/bs-stepper.module';
 
 import { NgxCaptchaModule } from 'ngx-captcha';
-// import {RecaptchaModule, RECAPTCHA_SETTINGS, RecaptchaSettings } from 'ng-recaptcha';
-//import { RecaptchaModule, RECAPTCHA_V3_SITE_KEY} from 'ng-recaptcha'
 
 
 
@@ -31,6 +31,7 @@ import { NgxCaptchaModule } from 'ngx-captcha';
     ExpedienteComponent,
     ConsultaComponent,
     MenuComponent,
+    VideoplayerComponent,
   ],
   imports: [
     CommonModule,

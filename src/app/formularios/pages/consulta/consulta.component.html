@@ -194,8 +194,8 @@
 							<td>{{item['HACIA']}}</td>
 							<td>{{this.getNroDias(item['FEC_DERIVACION'],item['FEC_RECIBIDO'])}}</td>
 							<td>{{item['ESTADO']}}</td>
-							<td>{{this.getFecha(item['FEC_DERIVACION'])}}</td>
-							<td>{{this.getFecha(item['FEC_RECIBIDO'])}}</td>
+							<td>{{item['FEC_DERIVACION']!==null?this.getFecha(item['FEC_DERIVACION']):''}}</td>
+							<td>{{item['FEC_RECIBIDO']!==null?this.getFecha(item['FEC_RECIBIDO']):this.getFecha(item['FEC_RECEPCION'])}}</td>
 							<td>{{item['DOCUMENTO_ADJUNTADO']}}</td>
 							<td>{{item['OBSERVACIONES_AL_ENVIAR']}}</td>
 							<td>{{item['OBSERVACIONES_AL_ARCHIVAR']}}</td>

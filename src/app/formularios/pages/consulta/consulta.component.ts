@@ -281,7 +281,9 @@ export class ConsultaComponent implements OnInit  {
   }
   // TODO METODO QUE RETORNA LA FECHA EXAMPLE 23-04-2023
   getFecha(_date:Date):String{
+
     const _fecha = new Date(_date);
+    console.log('FECHA NOW', _date)
     const _year = _fecha.getFullYear() // Año
     const _month = _fecha.getMonth() // Mes
     const _dayMonth = _fecha.getDate() // Dia del mes

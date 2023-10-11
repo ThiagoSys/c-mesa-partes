@@ -192,10 +192,10 @@
 							<td>{{(index+1).toString().length==1?'00':'0'}}{{index+1}}</td>
 							<td>{{item['DESDE']}}</td>
 							<td>{{item['HACIA']}}</td>
-							<td>{{this.getNroDias(item['FEC_DERIVACION'],item['FEC_RECIBIDO'])}}</td>
+							<td>{{item['FEC_RECIBIDO']!==null?(this.getNroDias(item['FEC_DERIVACION'],item['FEC_RECIBIDO'])):'0'}}</td>
 							<td>{{item['ESTADO']}}</td>
 							<td>{{item['FEC_DERIVACION']!==null?this.getFecha(item['FEC_DERIVACION']):''}}</td>
-							<td>{{item['FEC_RECIBIDO']!==null?this.getFecha(item['FEC_RECIBIDO']):this.getFecha(item['FEC_RECEPCION'])}}</td>
+							<td>{{item['FEC_RECIBIDO']!==null?this.getFecha(item['FEC_RECIBIDO']):''}}</td>
 							<td>{{item['DOCUMENTO_ADJUNTADO']}}</td>
 							<td>{{item['OBSERVACIONES_AL_ENVIAR']}}</td>
 							<td>{{item['OBSERVACIONES_AL_ARCHIVAR']}}</td>
@@ -228,9 +228,9 @@
 							<div class="d-flex justify-content-center align-items-center">
 								<img src="../../../../../assets/img/help-exp.png" alt="">
 							</div><br/>
-							<h4 class="text-center">{{ 'Este es su numero de expediente' | uppercase}}</h4>
+							<h4 class="text-center">{{ 'Ubique su numero de expediente' | uppercase}}</h4>
 							<div class="text-center">
-								<span class="">{{ 'En la parte del cuadro de datos esta su numero de expediente.'}}</span><br/><br/>
+								<span class="">{{ 'En el formato descargado o en el enviado a su correo electrónico.'}}</span><br/><br/>
 								<!-- <span class="">{{ 'Si el numero tiene guiones(-), solo ingrese el numero que esta dentro del los guiones.'}}</span><br/><br/> -->
 							</div>
 							<!-- <h4 class="text-center bold">{{ 'Número de expediente es 004462' | uppercase}} <i class="fa-solid fa-check" style="color: #1A984D;"></i></h4> -->

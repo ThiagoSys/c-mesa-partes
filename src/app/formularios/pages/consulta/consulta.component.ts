@@ -54,6 +54,10 @@ export class ConsultaComponent implements OnInit  {
   public loading: boolean = false;
   public showImg: boolean = true;
 
+
+  public toastMsgExito: string = ''
+  public toastMsgError: string = ''
+
   // Metodos del captcha, revisar los parametros si se borran o se agrega el captcha 
   //@ViewChild('captchaElem') captchaElem!: ReCaptcha2Component;
   @ViewChild('langInput') langInput!: ElementRef;
@@ -206,7 +210,7 @@ export class ConsultaComponent implements OnInit  {
       const resultado = partes[1]; // Obtenemos la parte en el índice 1
       return resultado
     } else {
-      console.log("Formato de texto no válido");
+      // console.log("Formato de texto no válido");
       return ''
     }
   }
@@ -220,17 +224,45 @@ export class ConsultaComponent implements OnInit  {
 
     const toastError = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasError'));
     const toasExito = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasExito'));
-    this.soapTramite.apiConsultarExp(_expdiente).subscribe((resp:any)=>{
-      if(resp.ok){
-        this.listExpediente = resp.data;
-        this.loading=false;
-        toasExito.show();
-      } else {
-        this.loading=false;
-        this.listExpediente = [];
-        toastError.show();
-      }
-    })
+
+    this.soapTramite.apiConsultarExp(_expdiente).subscribe({
+      next:(resp:any)=>{
+        if(resp.message==="Datos encontrados"){
+          this.listExpediente = resp.data;
+          this.loading=false;
+          toasExito.show();
+          this.toastMsgExito = 'Documento encontrado.'
+        }
+        if(resp.message==="Datos no encontrados"){
+          this.loading=false;
+          this.listExpediente = [];
+          toastError.show();
+          this.toastMsgError = 'Documento no encontrado, verifique los datos ingresado.'
+        }
+
+        if(resp.message==="Error api"){
+          this.loading=false;
+          this.listExpediente = [];
+          toastError.show();
+          this.toastMsgError = 'Error de respuesta.'
+        }
+
+        if(resp.message==="Error servidor"){
+          this.loading=false;
+          this.listExpediente = [];
+          toastError.show();
+          this.toastMsgError = 'Error.'
+        }
+
+    },error:(error) => {
+      // this.closeModalLoading();
+      toastError.show();
+      this.toastMsgError = 'Error al cargar los datos'
+    },complete:()=>{
+      // console.log('RESP COMPLETO')  
+    }
+  })
+
   }
 
   changeExp(event:any){

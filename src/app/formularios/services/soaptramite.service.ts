@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import * as xml2js from 'xml2js';
@@ -38,7 +38,7 @@ interface  InterfaceDocumento {
   providedIn: 'root'
 })
 export class SoaptramiteService {
-  //public baseUrl:string ='https://localhost:5050';
+  // public baseUrl:string ='http://localhost:5050';
   public baseUrl:string ='https://apps.municieneguilla.gob.pe:5050';
 
   constructor(private http: HttpClient) { }
@@ -48,9 +48,18 @@ export class SoaptramiteService {
     return this.http.get<any>(url)
   }
 
-  getOficinasXml() {
+  getOficinasXml(): Observable<any> {
     const url = `${this.baseUrl}/api/xmloficinas`;
-    return this.http.get<any>(url)
+    return this.http.get<any>(url).pipe(
+      map((resp)=> resp ),
+      catchError((error:any)=>{
+        if(error.ok==false && error.status==0){
+          throw new Error(`${error.statusText}`)
+        }else{
+          throw new Error(`Errror de connexion`)
+        }
+      })
+    )
   }
 
   getDocumentosXml():Observable<any> {
@@ -76,13 +85,7 @@ export class SoaptramiteService {
       // catchError( err => err)
     )
   }
-
-  getDatosPersonaXml({ paterno, materno, nombres, telefono, tipoDocumentoP, tipoPersona, nroDoc, ruc, correo,direccion }:{ paterno:string, materno:string, nombres:string, telefono:string, tipoDocumentoP:string, tipoPersona:string, nroDoc:string, ruc:string, correo:string,direccion:string }) {
-
-    const url = `${this.baseUrl}/api/xmldatospersona?paterno=${paterno}&materno=${materno}&nombres=${nombres}&telefono=${telefono}&tipoDocumentoP=${tipoDocumentoP}&tipoPersona=${tipoPersona}&nroDoc=${nroDoc}&ruc=${ruc}&correo=${correo}&direccion=${direccion}`;
-    return this.http.get<any>(url)
-  }
-
+  
   getDatosDocumentosXml({ asunto, claveWeb, documentoAdjunto, fecCreacion, fecDocumento, flgAnexo, flgTupa, folios, idAno, idDestino, idDocumento, idDocumentoPadre, idNroDocumento, idRemitenteE, idTipoDocumento, idTupa, nombreRemitente, nroDocumentoDoc, numDocumentoPadre, observaciones, plazo, remitente, reservado, tipo, usuCreacion }:InterfaceDocumento) {
 
     const url = `${this.baseUrl}/api/xmldatosdocumentos`;
@@ -95,14 +98,24 @@ export class SoaptramiteService {
   }
 
 
-  // TODO BUSCAR CON DNI
-  getDatosPersonaReniecXml({ documento }:{ documento:string }) {
-    const url = `${this.baseUrl}/api/xmldatospersonareniec`;
-    const body = { documento }
+  // TODO AGREGAR PERSONA O EMPRESA
+  getDatosPersonaXml({ paterno, materno, nombres, telefono, tipoDocumentoP, tipoPersona, nroDoc, ruc, correo,direccion }:{ paterno:string, materno:string, nombres:string, telefono:string, tipoDocumentoP:string, tipoPersona:string, nroDoc:string, ruc:string, correo:string,direccion:string }) {
+    const url = `${this.baseUrl}/api/xmldatospersona`;
+    const body = { paterno, materno, nombres, telefono }
     return this.http.post<any>(url, body)
   }
+
+  // TODO BUSCAR CON DNI
+  getDatosPersonaReniecXml({ documento }:{ documento:string }): Observable<any> {
+    const url = `${this.baseUrl}/api/xmldatospersonareniec`;
+    const body = { documento }
+    return this.http.post<any>(url, body).pipe( catchError((error: HttpErrorResponse)=>{
+      if (error.status === 0) { return throwError(() => new Error('El servidor no está disponible.')); }
+      return throwError(() => new Error('Error en la solicitud. Por favor, inténtelo de nuevo más tarde.'));
+    }))
+  }
   // TODO BUSCAR CON RUC 
-  getDatosEmpresaSunatXml({ documento }:{ documento:string }) {
+  getDatosEmpresaSunatXml({ documento }:{ documento:string }){
     const url = `${this.baseUrl}/api/xmldatosempresasunat`;
     const body = { documento }
     return this.http.post<any>(url, body)
@@ -131,8 +144,6 @@ export class SoaptramiteService {
   apiConsultarExp({nroexp, anio, claveweb}:{nroexp:string,anio:string, claveweb:string}){
     const url = `${this.baseUrl}/api/xmlconsultaexpediente`;
     const body = { nroexp, anio, claveweb}
-    // console.log('D', datos)
-    // return this.http.post(url, { observe:'response', responseType:'blob'}  )
     return this.http.post(url, body)
   }
 }

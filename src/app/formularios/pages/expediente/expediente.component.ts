@@ -323,14 +323,43 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
 
     this.myFunction(this.nroDocumento);
 
-    this.soapTramite.getDocumentosXml().subscribe((resp:any)=>{
-      this.selectTipoDocCie = resp.data
+    this.soapTramite.getDocumentosXml().subscribe({
+      next:(resp:any)=>{
+        if(resp.message==='Datos cargados'){
+          this.selectTipoDocCie = resp.data
+        }
+        if(resp.message==='Error datos vacios documento'){
+          console.log('No se cargo ningun dato documento')
+        }
+        if(resp.message==='Error XML a JSON documento'){
+          console.log('Error de formato')
+        }
+      }, error:(error)=>{
+        console.log('Error')
+      }, complete:()=>{
+        // console.log('Completo')
+      }
     })
 
-    this.soapTramite.getOficinasXml().subscribe((resp:any)=>{
-      const _idDes = resp.data.filter((_:any)=>{return _.ID=='9.31'});
-      this.selectTipoOfiCie = _idDes;
-      this.formGroupDoc.patchValue({'idDestino':_idDes[0].ID});
+    this.soapTramite.getOficinasXml().subscribe({
+      next:(resp:any)=>{
+        if(resp.message==='Datos cargados'){
+          const _idDes = resp.data.filter((_:any)=>{return _.ID=='9.31'});
+          this.selectTipoOfiCie = _idDes;
+          this.formGroupDoc.patchValue({'idDestino':_idDes[0].ID});
+        }
+        if(resp.message==='Error datos vacios oficina'){
+          console.log('No se cargo ningun dato oficina')
+        }
+        if(resp.message==='Error XML a JSON oficina'){
+          console.log('Error de formato')
+        }
+
+      }, error:(error)=>{
+        console.log('Error')
+      }, complete:()=>{
+        // console.log('Completo')
+      }
     })
 
     this.getWidth = window.innerWidth;
@@ -428,9 +457,26 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
  
     let tipoDocumentoP = (<HTMLInputElement>document.getElementById('tipoDocumentoP')).value
     rule  = tipoDocumentoP
+    // if(rule==='DNI'){
+    //   const validators = this.nroDocumento.validator? [this.nroDocumento.validator, Validators.minLength(8)] : Validators.minLength(8);
+    //   console.log('DNI',validators,  this.nroDocumento.validator)
+    //   console.log('DNI',this.formGroupSearch)
+    //   this.nroDocumento.setValidators(validators);
+    //   this.nroDocumento.updateValueAndValidity();      
+    // }
+
+    // if(rule==='RUC'){
+    //   const validators = this.nroDocumento.validator? [this.nroDocumento.validator, Validators.minLength(11)] : Validators.minLength(11);
+    //   console.log('RUC',validators,  this.nroDocumento.validator)
+
+    //   this.nroDocumento.setValidators(validators);
+    //   this.nroDocumento.updateValueAndValidity();      
+    // }
+
+
+
 
     this.searchActive=true;
-   
     switch (rule) {
       case "RUC":
         item1.maxLength = 11
@@ -440,6 +486,7 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
         this.formGroupPersona.reset();
         this.formGroupEmpresa.reset();
         this.imagenFoto='';
+
        break;
      case "DNI": 
       item1.maxLength= 8
@@ -720,65 +767,76 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
     const toastExito = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasExito'));
 
 
-    this.soapTramite.getDatosEmpresaSunatXml({documento}).subscribe((resp)=>{
-      // console.log('DATA SIN',resp, documento)
-      if(resp.message==='Sin datos'){
-        // console.log('DATA SIN',resp)
-        // this.loading = false;
-        this.closeModalLoading()
+    this.soapTramite.getDatosEmpresaSunatXml({documento}).subscribe({
+      next:(resp)=>{
+        if(resp.message==='Documento no valido'){
+          this.closeModalLoading();
+          toastError.show();
+          this.toastMsgError = 'Documento ingresado no valido'
+        }
 
-      }
+        if(resp.message==='Error api'){
+          this.closeModalLoading();
+          toastError.show();
+          this.toastMsgError = 'Error de respuesta'
+        }
 
-      if(resp.message==='Sin datos que mostrar'){
-        // console.log('Registro no encontrado',resp)
-        // this.loading = false;
-        this.closeModalLoading()
+        if(resp.message==='Error de formato'){
+          this.closeModalLoading()
+          toastError.show();
+          this.toastMsgError = 'Error de formato'
+        }
 
-      }
+        if(resp.message==='Error servidor'){
+          this.closeModalLoading()
+          toastError.show();
+          this.toastMsgError = 'Error'
+        }
 
-      if(resp.message==='Datos encontrados'){
-        // this.loading = false;
-        this.closeModalLoading()
+        if(resp.message==='Datos encontrados'){
+          this.closeModalLoading()
 
-                  
-        this.btnBuscar = false;
-        tipo_pe.disabled = true;
-        tipo_do.disabled = true;
-        nro_doc.disabled = true;
+          this.btnBuscar = false;
+          tipo_pe.disabled = true;
+          tipo_do.disabled = true;
+          nro_doc.disabled = true;
 
-        _razonSocial.disabled = true;
-        _tipoContribuyente.disabled = true;
-        _departamento.disabled = true;
-        _provincia.disabled = true;
-        _distritos.disabled = true;
-        _domicilioFiscal.disabled = true;
+          _razonSocial.disabled = true;
+          _tipoContribuyente.disabled = true;
+          _departamento.disabled = true;
+          _provincia.disabled = true;
+          _distritos.disabled = true;
+          _domicilioFiscal.disabled = true;
 
-        this.formGroupEmpresa.patchValue({
-          tipoPersonaEmp: resp.data.DescTipoPersona==='PERSONA NATURAL'?'NATURAL':'JURIDICA',
-          razonSocial: resp.data.NombreRazonSocial,
-          departamento: resp.data.Departamento,
-          provincia: resp.data.Provincia,
-          distrito: resp.data.Distrito,
-          domicilioFiscal: resp.data.DomicilioFiscal,
-          tipoContribuyente: resp.data.DescPersona,
-        })
+          this.formGroupEmpresa.patchValue({
+            tipoPersonaEmp: resp.data.DescTipoPersona==='PERSONA NATURAL'?'NATURAL':'JURIDICA',
+            razonSocial: resp.data.NombreRazonSocial,
+            departamento: resp.data.Departamento,
+            provincia: resp.data.Provincia,
+            distrito: resp.data.Distrito,
+            domicilioFiscal: resp.data.DomicilioFiscal,
+            tipoContribuyente: resp.data.DescPersona,
+          })
 
-        toastExito.show();
-        this.toastMsgOk = 'Documento entontrado.'
-      }
+          toastExito.show();
+          this.toastMsgOk = 'Documento entontrado.'
+        }
 
-      if(resp.message==='Datos no encontrados'){
-        // this.loading = false;
-        this.closeModalLoading()
-
-        this.btnBuscar = false;
-        tipo_pe.disabled = false;
-        tipo_do.disabled = false;
-        nro_doc.disabled = false;
-
-        //console.log('Sunat no encontrado',resp)
+        if(resp.message==='Datos no encontrados'){
+          this.closeModalLoading()
+          this.btnBuscar = false;
+          tipo_pe.disabled = false;
+          tipo_do.disabled = false;
+          nro_doc.disabled = false;
+          toastError.show();
+          this.toastMsgError = 'Documento no encontrado, puede ingresar sus datos manualmente.'
+        }
+      },error:(error) => {
+        this.closeModalLoading();
         toastError.show();
-        this.toastMsgError = 'Documento no encontrado, puede ingresar sus datos manualmente.'
+        this.toastMsgError = 'Error al cargar los datos'
+      },complete:()=>{
+        // console.log('RESP COMPLETO')  
       }
     })
   }
@@ -796,26 +854,38 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
     const toastError = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasError'));
     const toastExito = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasExito'));
 
-    this.soapTramite.getDatosPersonaReniecXml({documento}).subscribe((resp)=>{
-      if(resp.message==='Sin datos'){
-        // console.log('DATA SIN',resp)
-        // this.loading = false;
-        this.closeModalLoading()
-
+    this.soapTramite.getDatosPersonaReniecXml({documento}).subscribe({
+      next:(resp)=>{
+      if(resp.message==='Documento no valido'){
+        this.imagenFoto='';
+        this.closeModalLoading();
+        toastError.show();
+        this.toastMsgError = 'Documento ingresado no valido'
       }
 
-      if(resp.message==='Sin datos que mostrar'){
-        // console.log('Registro no encontrado',resp)
+      if(resp.message==='Error api'){
         this.imagenFoto='';
-        // this.loading = false;
         this.closeModalLoading()
+        toastError.show();
+        this.toastMsgError = 'Error de respuesta'
+      }
 
+      if(resp.message==='Error de formato'){
+        this.imagenFoto='';
+        this.closeModalLoading()
+        toastError.show();
+        this.toastMsgError = 'Error de formato'
+      }
+
+      if(resp.message==='Error servidor'){
+        this.imagenFoto='';
+        this.closeModalLoading()
+        toastError.show();
+        this.toastMsgError = 'Error'
       }
 
       if(resp.message==='Datos encontrados'){
-        // this.loading = false;
         this.closeModalLoading()
-
 
         this.btnBuscar = false;
         tipo_pe.disabled = true;
@@ -856,30 +926,54 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
         toastError.show();
         this.toastMsgError = 'Documento no encontrado, puede ingresar sus datos manualmente.'
       }
-    })
+    },error:(error) => {
+      this.closeModalLoading();
+      toastError.show();
+      this.toastMsgError = 'Error al cargar los datos'
+    },complete:()=>{
+      // console.log('RESP COMPLETO')  
+    }})
   }
 
 
   // TODO AQUI PARA AGREGAR PERSONAS O EMPRESAS A LA BASE DE DATOS
   addPersona(form:any){
-    // this.loading = true;
+    
     this.openModalLoading()
     var tipo_do:HTMLInputElement = (<HTMLInputElement>document.getElementById('tipoDocumentoP'));
     var nro_doc:HTMLInputElement = (<HTMLInputElement>document.getElementById('nroDocumento'));
+
+    const toastError = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasError'));
+    const toastExito = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasExito'));
 
     const tipoDoc_Val: string = tipo_do.value;
     const nroDoc_Val: string = nro_doc.value;
 
     const documento = this.formGroupSearch.value.nroDocumento;
-
-    if(this.nroDocumento.valid&&this.tipoDocumentoP.valid){
-      if(tipoDoc_Val==='RUC'){ return this.empresa(documento, form)}
-      if(tipoDoc_Val==='DNI'){ return this.persona(documento, form)}
+    if(documento!==null&&this.nroDocumento.valid&&this.tipoDocumentoP.valid){
+      if(documento.length==8){
+        if(tipoDoc_Val==='DNI'){ return this.persona(documento, form)}
+      }
+      if(documento.length==11){
+         if(tipoDoc_Val==='RUC'){ return this.empresa(documento, form)}
+      }
+      if(documento.length!==8||documento.length!==11){
+        this.closeModalLoading()
+        toastError.show();
+        this.toastMsgError = 'El documento no es valido'
+     }
+    }
+    if(documento==null){
+      if(documento==null){
+        this.closeModalLoading()
+        toastError.show();
+        this.toastMsgError = 'El documento no debe estar vacio'
+      }
     }
   }
 
   persona(documento:string, form:any){
-    //this.showFormDocumento = true;
+
     var _paterno:HTMLInputElement = (<HTMLInputElement>document.getElementById('paterno'));
     var _materno:HTMLInputElement = (<HTMLInputElement>document.getElementById('materno'));
     var _nombres:HTMLInputElement = (<HTMLInputElement>document.getElementById('nombres'));
@@ -888,6 +982,9 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
     var _direccion:HTMLInputElement = (<HTMLInputElement>document.getElementById('direccion'));
 
     var _contentScroll:HTMLInputElement = (<HTMLInputElement>document.getElementById('content'));
+
+    const toastError = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasError'));
+    const toastExito = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasExito'));
     
     const persona = {
       paterno: form.paterno.toUpperCase(),
@@ -902,32 +999,60 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
       direccion: form.direccion.toUpperCase(),
     }
     // this.loading=false;
-    this.soapTramite.getDatosPersonaXml(persona).subscribe((resp)=>{
-      this.showFormDocumento = true;
-      this.btnPersona = false;
-      _materno.disabled = true;
-      _paterno.disabled = true;
-      _nombres.disabled = true;
-      _telefono.disabled = true;
-      _correo.disabled = true;
-      _direccion.disabled = true;
+    this.soapTramite.getDatosPersonaXml(persona).subscribe({
+      next:(resp)=>{
+        if(resp.message === "Datos persona"){
+          this.showFormDocumento = true;
+          this.btnPersona = false;
+          _materno.disabled = true;
+          _paterno.disabled = true;
+          _nombres.disabled = true;
+          _telefono.disabled = true;
+          _correo.disabled = true;
+          _direccion.disabled = true;
 
-      setTimeout(() => {
-        this.closeModalLoading()
-        this.formGroupDoc.get('idRemitenteE')?.setValue(resp.data);
-        this.formGroupDoc.patchValue({'nombreRemitente':`${persona.paterno} ${persona.materno} ${persona.nombres}`});
-        var _remitente:HTMLInputElement = (<HTMLInputElement>document.getElementById('nombreRemitente'));
-        _remitente.disabled = true;  
+          setTimeout(() => {
+            this.closeModalLoading()
+            this.formGroupDoc.get('idRemitenteE')?.setValue(resp.data);
+            this.formGroupDoc.patchValue({'nombreRemitente':`${persona.paterno} ${persona.materno} ${persona.nombres}`});
+            var _remitente:HTMLInputElement = (<HTMLInputElement>document.getElementById('nombreRemitente'));
+            _remitente.disabled = true;
 
-        const scrollPosition = _contentScroll.scrollHeight;
-        window.scrollTo({
-          top: scrollPosition,
-          behavior: 'smooth'
-        });
+            const scrollPosition = _contentScroll.scrollHeight;
+            window.scrollTo({
+              top: scrollPosition,
+              behavior: 'smooth'
+            });
+          }, 1000);
+        }
+        if(resp.message === "Error api"){
+          this.closeModalLoading()
+          toastError.show();
+          this.toastMsgError = 'Error de respuesta'
+          this.showFormDocumento = true;
+        }
+
+        if(resp.message === "Error servidor"){
+          this.closeModalLoading()
+          toastError.show();
+          this.toastMsgError = 'Error'
+        }
+
+        if(resp.message === "Error de formato"){
+          this.closeModalLoading()
+          toastError.show();
+          this.toastMsgError = 'Error de formato'
+        }
 
 
-      }, 1000);
-    })
+    },error:(error) => {
+      this.closeModalLoading();
+      toastError.show();
+      this.toastMsgError = 'Error al cargar los datos'
+    },complete:()=>{
+      // console.log('RESP COMPLETO')  
+    }
+  })
   }
 
   empresa(documento:string, form:any){
@@ -942,6 +1067,9 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
     var _correoEmp:HTMLInputElement = (<HTMLInputElement>document.getElementById('correoEmp'));
 
     var _contentScroll:HTMLInputElement = (<HTMLInputElement>document.getElementById('content'));
+
+    const toastError = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasError'));
+    const toastExito = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasExito'));
 
     const persona = {
       paterno: '',
@@ -959,34 +1087,61 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
     // console.log(persona)
     // this.loading=false;
 
-    this.soapTramite.getDatosPersonaXml(persona).subscribe((resp)=>{
-      this.showFormDocumento = true;
-      this.btnEmpresa = false;
+    this.soapTramite.getDatosPersonaXml(persona).subscribe({
+      next:(resp)=>{
+        if(resp.message === "Datos persona"){
+          this.showFormDocumento = true;
+          this.btnEmpresa = false;
 
-      _razonSocial.disabled = true;
-      _tipoContribuyente.disabled = true;
-      _departamento.disabled = true;
-      _provincia.disabled = true;
-      _distritos.disabled = true;
-      _domicilioFiscal.disabled = true;
-      _telefonoEmp.disabled = true;
-      _correoEmp.disabled = true;
+          _razonSocial.disabled = true;
+          _tipoContribuyente.disabled = true;
+          _departamento.disabled = true;
+          _provincia.disabled = true;
+          _distritos.disabled = true;
+          _domicilioFiscal.disabled = true;
+          _telefonoEmp.disabled = true;
+          _correoEmp.disabled = true;
 
-      setTimeout(() => {  
-        this.closeModalLoading()
-        this.formGroupDoc.get('idRemitenteE')?.setValue(resp.data);
-        this.formGroupDoc.patchValue({'nombreRemitente':`${persona.nombres}`});
-        var _remitente:HTMLInputElement = (<HTMLInputElement>document.getElementById('nombreRemitente'));
-        _remitente.disabled = true;
+          setTimeout(() => {  
+            this.closeModalLoading()
+            this.formGroupDoc.get('idRemitenteE')?.setValue(resp.data);
+            this.formGroupDoc.patchValue({'nombreRemitente':`${persona.nombres}`});
+            var _remitente:HTMLInputElement = (<HTMLInputElement>document.getElementById('nombreRemitente'));
+            _remitente.disabled = true;
 
-        const scrollPosition = _contentScroll.scrollHeight;
-        window.scrollTo({
-          top: scrollPosition,
-          behavior: 'smooth'
-        });
+            const scrollPosition = _contentScroll.scrollHeight;
+            window.scrollTo({
+              top: scrollPosition,
+              behavior: 'smooth'
+            });
+          }, 1000);          
+        }
 
-      }, 1000);
+        if(resp.message === "Error api"){
+          this.closeModalLoading()
+          toastError.show();
+          this.toastMsgError = 'Error de respuesta'
+        }
 
+        if(resp.message === "Error servidor"){
+          this.closeModalLoading()
+          toastError.show();
+          this.toastMsgError = 'Error'
+        }
+
+        if(resp.message === "Error de formato"){
+          this.closeModalLoading()
+          toastError.show();
+          this.toastMsgError = 'Error de formato'
+        }
+
+      },error:(error) => {
+        this.closeModalLoading();
+        toastError.show();
+        this.toastMsgError = 'Error al cargar los datos'
+      },complete:()=>{
+        // console.log('RESP COMPLETO')  
+      }
     })
   }
   
@@ -1020,8 +1175,9 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
     this.formGroupSearch.get('tipoDocumentoP')?.setValue('');
     this.formGroupSearch.get('nroDocumento')?.setValue('');
 
-
+    this.showFormDocumento = false;
     if(this.formGroupSearch.value.tipoDocumentoP==="DNI"){
+
       var _paterno:HTMLInputElement = (<HTMLInputElement>document.getElementById('paterno'));
       var _materno:HTMLInputElement = (<HTMLInputElement>document.getElementById('materno'));
       var _nombres:HTMLInputElement = (<HTMLInputElement>document.getElementById('nombres'));
@@ -1036,9 +1192,9 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
       _correo.disabled = false;
       _direccion.disabled = false;
 
-      this.showFormDocumento = false;
     }
     if(this.formGroupSearch.value.tipoDocumentoP==="RUC"){
+
       var _razonSocial:HTMLInputElement = (<HTMLInputElement>document.getElementById('razonSocial'));
       var _tipoContribuyente:HTMLInputElement = (<HTMLInputElement>document.getElementById('tipoContribuyente'));
       var _departamento:HTMLInputElement = (<HTMLInputElement>document.getElementById('departamento'));
@@ -1057,7 +1213,6 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
       _telefonoEmp.disabled = false;
       _correoEmp.disabled = false;
 
-      this.showFormDocumento = false;
 
     }
   }
@@ -1195,6 +1350,8 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
   // TODO AQUI PARA REGISTRAR UN DOCUMENTO A LA BASE DE DATOS
   enviar(formdoc:any){
     // this.loading =true;
+    const toastError = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasError'));
+    const toastExito = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasExito'));
     this.openModalLoading()
     const _doc = {
       asunto: formdoc.asunto,
@@ -1226,20 +1383,40 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
     // console.log(_doc.nombreRemitente)
     // console.log(formdoc.nombreRemitente)
     // console.log(_doc)
-    this.soapTramite.getDatosDocumentosXml(_doc).subscribe((resp:any)=>{
-      // console.log('MY',resp)
-      if(resp.ok&&resp.message==='Documento ingresado'){
-        this.enviarPdfDoc(resp.data)
-        this.enviarPdfAnexo(resp.data)
-        this.obtenerDataDocumento(resp.data)
-      }
-      if(resp.ok==false){
-        const toastError = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasError'));
+    this.soapTramite.getDatosDocumentosXml(_doc).subscribe({
+      next:(resp:any)=>{
+        // console.log('MY',resp)
+        if(resp.ok&&resp.message==='Documento ingresado'){
+          this.enviarPdfDoc(resp.data)
+          this.enviarPdfAnexo(resp.data)
+          this.obtenerDataDocumento(resp.data)
+        }
+
+        if(resp.message === "Error api"){
+          this.closeModalLoading()
+          toastError.show();
+          this.toastMsgError = 'Error de respuesta'
+        }
+
+        if(resp.message === "Error servidor"){
+          this.closeModalLoading()
+          toastError.show();
+          this.toastMsgError = 'Error'
+        }
+
+        if(resp.message === "Error de formato"){
+          this.closeModalLoading()
+          toastError.show();
+          this.toastMsgError = 'Error de formato'
+        }
+
+      },error:(error) => {
         this.closeModalLoading();
         toastError.show();
-        this.toastMsgError = 'Error en el sistema'
+        this.toastMsgError = 'Error al cargar los datos'
+      },complete:()=>{
+        // console.log('RESP COMPLETO')  
       }
-
     })
   }
 
@@ -1257,31 +1434,65 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
  // TODO AQUI PARA OBTENER LOS DATOS DEL DOCUMENTO REGISTRADO
   obtenerDataDocumento(idDoc:string){
     const _data = { idDoc: idDoc };
-    this.soapTramite.getDocumentoIngresadoXml(_data).subscribe((response:any)=>{
-      if(response.ok){
-        // crea object para mostrar el documento en el modal de la pagina HTML
-        const _documento = {
-          numeroexpediente: this.expSimplificado(response.data[0].numeroexpediente),
-          clave_web: response.data[0].clave_web,
-          remitente: response.data[0].remitente,
-          fec_recepcion: response.data[0].fec_recepcion,
-          asunto: response.data[0].asunto,
-          folios: response.data[0].FOLIOS,
-          domicilio: response.data[0].domicilio,
-          nroDoc: response.data[0].DNI!==''?response.data[0].DNI:response.data[0].RUC,
-          tipoDocumento: response.data[0].flg_persona==='N'?'D.N.I':'R.U.C',
-        };
-        this.resultDocumento = _documento;
+    const toastError = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasError'));
+    const toastExito = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasExito'));
 
-        const _enviarDoc = {
-          email:(this.formGroupSearch.value.tipoDocumentoP==='DNI')?
-          (this.formGroupPersona.value.correo==''?'mesadepartesvirtual@municieneguilla.gob.pe':this.formGroupPersona.value.correo):
-          (this.formGroupEmpresa.value.correoEmp==''?'mesadepartesvirtual@municieneguilla.gob.pe':this.formGroupEmpresa.value.correoEmp),
-          documento: _documento,
+    this.soapTramite.getDocumentoIngresadoXml(_data).subscribe({
+      next:(response:any)=>{
+        if(response.message==="Datos encontrados"){
+          // crea object para mostrar el documento en el modal de la pagina HTML
+          const _documento = {
+            numeroexpediente: this.expSimplificado(response.data[0].numeroexpediente),
+            clave_web: response.data[0].clave_web,
+            remitente: response.data[0].remitente,
+            fec_recepcion: response.data[0].fec_recepcion,
+            asunto: response.data[0].asunto,
+            folios: response.data[0].FOLIOS,
+            domicilio: response.data[0].domicilio,
+            nroDoc: response.data[0].DNI!==''?response.data[0].DNI:response.data[0].RUC,
+            tipoDocumento: response.data[0].flg_persona==='N'?'D.N.I':'R.U.C',
+          };
+          this.resultDocumento = _documento;
+
+          const _enviarDoc = {
+            email:(this.formGroupSearch.value.tipoDocumentoP==='DNI')?
+            (this.formGroupPersona.value.correo==''?'mesadepartesvirtual@municieneguilla.gob.pe':this.formGroupPersona.value.correo):
+            (this.formGroupEmpresa.value.correoEmp==''?'mesadepartesvirtual@municieneguilla.gob.pe':this.formGroupEmpresa.value.correoEmp),
+            documento: _documento,
+          }
+          this.generarFileJspdf(_data.idDoc, _documento.nroDoc, _enviarDoc );
         }
-        // console.log(_enviarDoc)
-        // this.openModal()
-        this.generarFileJspdf(_data.idDoc, _documento.nroDoc, _enviarDoc );
+
+        if(response.message === "Datos no encontrados"){
+          this.closeModalLoading()
+          toastError.show();
+          this.toastMsgError = response.message
+        }
+        
+        if(response.message === "Error api"){
+          this.closeModalLoading()
+          toastError.show();
+          this.toastMsgError = 'Error de respuesta'
+        }
+
+        if(response.message === "Error servidor"){
+          this.closeModalLoading()
+          toastError.show();
+          this.toastMsgError = 'Error'
+        }
+
+        if(response.message === "Error de formato"){
+          this.closeModalLoading()
+          toastError.show();
+          this.toastMsgError = 'Error de formato'
+        }
+
+      },error:(error) => {
+        this.closeModalLoading();
+        toastError.show();
+        this.toastMsgError = 'Error al cargar los datos'
+      },complete:()=>{
+        // console.log('RESP COMPLETO')  
       }
     })
   }

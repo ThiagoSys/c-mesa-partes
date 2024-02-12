@@ -100,8 +100,6 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
   public getWidth:any;
   public getHeight:any;
 
-
-
   public archivos : any = [];
   public archivos2: any = [];
   public archivos3:any=[];
@@ -143,15 +141,6 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
 
 
   public searchActive : boolean = true;
-
-
-  // public errorMsg0: string = '(Seleccione un campo)';
-  // public errorMsg1: string = '(No puede quedar vacio)';
-  // public errorMsg2: string = '(Ingrese correctamente el DNI)';
-  // public errorMsg3: string = '(Ingrese correctamente el RUC)';
-  // public errorMsg4: string = '(Ingrese correctamente el Carnet de extranjería)';
-  // public errorMsg5: string = '(Ingrese correctamente el Pasaporte)';
-
 
   public errorMsgTipoPersona: string = '';
   public errorMsgTipoDocumentoP: string = '';
@@ -329,10 +318,10 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
           this.selectTipoDocCie = resp.data
         }
         if(resp.message==='Error datos vacios documento'){
-          console.log('No se cargo ningun dato documento')
+          // console.log('No se cargo ningun dato documento')
         }
         if(resp.message==='Error XML a JSON documento'){
-          console.log('Error de formato')
+          // console.log('Error de formato')
         }
       }, error:(error)=>{
         console.log('Error')
@@ -349,10 +338,10 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
           this.formGroupDoc.patchValue({'idDestino':_idDes[0].ID});
         }
         if(resp.message==='Error datos vacios oficina'){
-          console.log('No se cargo ningun dato oficina')
+          // console.log('No se cargo ningun dato oficina')
         }
         if(resp.message==='Error XML a JSON oficina'){
-          console.log('Error de formato')
+          // console.log('Error de formato')
         }
 
       }, error:(error)=>{
@@ -369,6 +358,8 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
   }
   ngAfterViewInit(): void { 
     $('[data-bs-toggle="tooltip"]').tooltip();
+
+    //console.log('DETECTER')
   }
 
 
@@ -394,7 +385,7 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
     const {year, month, day } = this.dateNow();
     this.formGroupDoc.get('idAno')?.setValue(year);
     //this.formGroupDoc.patchValue({'idAno':year});
-    this.formGroupDoc.patchValue({'reservado':'FALSE'});
+    this.formGroupDoc.patchValue({'reservado':'1'});
     this.formGroupDoc.patchValue({'tipo':'E'});
     this.formGroupDoc.patchValue({'usuCreacion': 'VIRTUAL'});
     this.formGroupDoc.patchValue({'fecCreacion': `${year}-${month}-${day}`});
@@ -702,7 +693,6 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
   // TODO AQUI PARA BUSCARR PERSONAS O EMPRESAS DE LA BASE DE DATOS
   buscar(){
 
-    // this.loading = true;
     this.openModalLoading()
 
     var tipo_do:HTMLInputElement = (<HTMLInputElement>document.getElementById('tipoDocumentoP'));
@@ -915,7 +905,6 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
       }
 
       if(resp.message==='Datos no encontrados'){
-        // this.loading = false;
         this.closeModalLoading()
 
         this.btnBuscar = false;
@@ -939,7 +928,7 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
   // TODO AQUI PARA AGREGAR PERSONAS O EMPRESAS A LA BASE DE DATOS
   addPersona(form:any){
     
-    this.openModalLoading()
+    // this.openModalLoading()
     var tipo_do:HTMLInputElement = (<HTMLInputElement>document.getElementById('tipoDocumentoP'));
     var nro_doc:HTMLInputElement = (<HTMLInputElement>document.getElementById('nroDocumento'));
 
@@ -955,7 +944,7 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
         if(tipoDoc_Val==='DNI'){ return this.persona(documento, form)}
       }
       if(documento.length==11){
-         if(tipoDoc_Val==='RUC'){ return this.empresa(documento, form)}
+        if(tipoDoc_Val==='RUC'){ return this.empresa(documento, form)}
       }
       if(documento.length!==8||documento.length!==11){
         this.closeModalLoading()
@@ -998,10 +987,12 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
       correo:form.correo.toLowerCase(),
       direccion: form.direccion.toUpperCase(),
     }
-    // this.loading=false;
+
+    // console.log('PERSONA',persona)
     this.soapTramite.getDatosPersonaXml(persona).subscribe({
       next:(resp)=>{
         if(resp.message === "Datos persona"){
+          this.closeModalLoading()
           this.showFormDocumento = true;
           this.btnPersona = false;
           _materno.disabled = true;
@@ -1010,9 +1001,8 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
           _telefono.disabled = true;
           _correo.disabled = true;
           _direccion.disabled = true;
-
           setTimeout(() => {
-            this.closeModalLoading()
+            // console.log(resp)
             this.formGroupDoc.get('idRemitenteE')?.setValue(resp.data);
             this.formGroupDoc.patchValue({'nombreRemitente':`${persona.paterno} ${persona.materno} ${persona.nombres}`});
             var _remitente:HTMLInputElement = (<HTMLInputElement>document.getElementById('nombreRemitente'));
@@ -1020,8 +1010,8 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
 
             const scrollPosition = _contentScroll.scrollHeight;
             window.scrollTo({
-              top: scrollPosition,
-              behavior: 'smooth'
+             top: scrollPosition,
+             behavior: 'smooth'
             });
           }, 1000);
         }
@@ -1029,7 +1019,7 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
           this.closeModalLoading()
           toastError.show();
           this.toastMsgError = 'Error de respuesta'
-          this.showFormDocumento = true;
+          //this.showFormDocumento = true;
         }
 
         if(resp.message === "Error servidor"){
@@ -1052,7 +1042,7 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
     },complete:()=>{
       // console.log('RESP COMPLETO')  
     }
-  })
+    })
   }
 
   empresa(documento:string, form:any){
@@ -1085,7 +1075,6 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
     }
 
     // console.log(persona)
-    // this.loading=false;
 
     this.soapTramite.getDatosPersonaXml(persona).subscribe({
       next:(resp)=>{
@@ -1349,7 +1338,6 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
 
   // TODO AQUI PARA REGISTRAR UN DOCUMENTO A LA BASE DE DATOS
   enviar(formdoc:any){
-    // this.loading =true;
     const toastError = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasError'));
     const toastExito = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasExito'));
     this.openModalLoading()
@@ -1387,12 +1375,14 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
       next:(resp:any)=>{
         // console.log('MY',resp)
         if(resp.ok&&resp.message==='Documento ingresado'){
+          // console.log('AQUIII',resp.data)
           this.enviarPdfDoc(resp.data)
           this.enviarPdfAnexo(resp.data)
           this.obtenerDataDocumento(resp.data)
         }
 
         if(resp.message === "Error api"){
+          // console.log('AQUIII ERROR')
           this.closeModalLoading()
           toastError.show();
           this.toastMsgError = 'Error de respuesta'
@@ -1426,7 +1416,6 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
       const resultado = partes[1]; // Obtenemos la parte en el índice 1
       return resultado
     } else {
-      console.log("Formato de texto no válido");
       return ''
     }
   }
@@ -1439,6 +1428,7 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
 
     this.soapTramite.getDocumentoIngresadoXml(_data).subscribe({
       next:(response:any)=>{
+        // console.log('SOAP DOC',response)
         if(response.message==="Datos encontrados"){
           // crea object para mostrar el documento en el modal de la pagina HTML
           const _documento = {
@@ -1460,6 +1450,7 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
             (this.formGroupEmpresa.value.correoEmp==''?'mesadepartesvirtual@municieneguilla.gob.pe':this.formGroupEmpresa.value.correoEmp),
             documento: _documento,
           }
+          // console.log('Correo',_enviarDoc)
           this.generarFileJspdf(_data.idDoc, _documento.nroDoc, _enviarDoc );
         }
 
@@ -1502,6 +1493,7 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
   async enviarPdfDoc(claveDoc:string){
     // console.log('CLAVE',claveDoc)
     if(this.fileTmpDoc.length!==0){
+      // console.log('CLAVE',claveDoc, this.fileTmpDoc)
       for (let i = 0; i < this.fileTmpDoc.length; i++) {
         var formularioDeDatos = new FormData();
         formularioDeDatos.append("myfile", this.fileTmpDoc[i].fileRaw, this.fileTmpDoc[i].fileName);
@@ -1517,8 +1509,9 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
   }
 
   async enviarPdfAnexo(claveDoc:string){
-    // console.log('CLAVE',claveDoc)
+    // console.log('CLAVE',claveDoc, this.fileTmpAnexo)
     if(this.fileTmpAnexo.length!==0){
+
       for (let i = 0; i < this.fileTmpAnexo.length; i++) {
         var formularioDeDatos = new FormData();
         formularioDeDatos.append("myfile", this.fileTmpAnexo[i].fileRaw, this.fileTmpAnexo[i].fileName);
@@ -1606,18 +1599,17 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
     formExp.append('orden', (1).toString());
     formExp.append('claveDoc', claveDoc);
     this.soapTramite.generateOnePdf(formExp).subscribe((resp:any)=>{
+      // console.log('Correo API', resp)
       if(resp.ok){
         const _data = {
           email:expediente.email,
           documento:expediente.documento,
           file:resp.data,
         }
-
             // console.log('OK EMAIL')
 
         this.soapTramite.enviarCorreo(_data).subscribe((resp:any)=>{ 
           // console.log('OK EMAIL 0000', resp)
-
           if(resp.ok){
 
             this.closeModalLoading()
@@ -1625,8 +1617,16 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
             const toastExito = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasExito'));
             toastExito.show();
             this.toastMsgOk='Expediente registrado con exito.'
-            this.loading = false;
+            //this.loading = false;
             this.openModal();
+          }else{
+            if(resp.message='Error correo'){
+              //this.loading = false;
+              this.closeModalLoading()
+              const toastError = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasError'));
+              toastError.show();
+              this.toastMsgError='No se envio el mensaje a su correo.'
+            }
           }
         })
 

@@ -38,15 +38,15 @@ interface  InterfaceDocumento {
   providedIn: 'root'
 })
 export class SoaptramiteService {
-  // public baseUrl:string ='http://localhost:5050';
-  public baseUrl:string ='https://apps.municieneguilla.gob.pe:5050';
+  public baseUrl:string ='https://localhost:5050';
+  //public baseUrl:string ='https://apps.municieneguilla.gob.pe:9096';
 
   constructor(private http: HttpClient) { }
 
-  documentoSoap(hashCode: string) {
-    const url = `${this.baseUrl}/api/xmlsoap`;
-    return this.http.get<any>(url)
-  }
+  // documentoSoap(hashCode: string) {
+  //   const url = `${this.baseUrl}/api/xmlsoap`;
+  //   return this.http.get<any>(url)
+  // }
 
   getOficinasXml(): Observable<any> {
     const url = `${this.baseUrl}/api/xmloficinas`;
@@ -101,7 +101,7 @@ export class SoaptramiteService {
   // TODO AGREGAR PERSONA O EMPRESA
   getDatosPersonaXml({ paterno, materno, nombres, telefono, tipoDocumentoP, tipoPersona, nroDoc, ruc, correo,direccion }:{ paterno:string, materno:string, nombres:string, telefono:string, tipoDocumentoP:string, tipoPersona:string, nroDoc:string, ruc:string, correo:string,direccion:string }) {
     const url = `${this.baseUrl}/api/xmldatospersona`;
-    const body = { paterno, materno, nombres, telefono }
+    const body = { paterno, materno, nombres, telefono, nroDoc, tipoDocumentoP, tipoPersona, ruc, correo, direccion }
     return this.http.post<any>(url, body)
   }
 

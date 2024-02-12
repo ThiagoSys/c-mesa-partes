@@ -233,7 +233,6 @@
 		<!--- FORMULARIO PARA ENVIAR EL DOCUMENTO Y SUBIR EL PDF-->
 
 		<div *ngIf="showFormDocumento" class="container cuadro-blanco" style="padding-left: 0px!important; padding-right: 0px!important;">
-		<!-- <div *ngIf="true" class="container cuadro-blanco" style="padding-left: 0px!important; padding-right: 0px!important;"> -->
 
 			<div class=""><h4 class="titulo-11 py-2 text-center">Datos del documento</h4></div>
 			<div class="mx-3">
@@ -247,16 +246,16 @@
 							</div>
 						</div>
 
-						<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
+						 <div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
 							<div class="col-md-12 mb-0">
 								<span class="subtitulo">Destino<span *ngIf="this.formGroupDoc.get('idDestino')?.status==='INVALID'" class="text-danger">(!)</span></span>
-								<select name="idDestino" id="idDestino"  formControlName="idDestino"  class="form-select custom-select col-md-12" (change)="tipodocchange($event)" ngModel required >
+								<!-- <select name="idDestino" id="idDestino"  formControlName="idDestino"  class="form-select custom-select col-md-12" (change)="tipodocchange($event)" ngModel required > -->
+								<select name="idDestino" id="idDestino"  formControlName="idDestino"  class="form-select custom-select col-md-12" ngModel required >
 									<option value="">[SELECCIONE]</option>
-									<option *ngFor="let doc of selectTipoOfiCie;" [value]="doc['ID']">{{doc['DESCRIPCION']}}</option>
-								</select>
-							</div> 
+									<option *ngFor="let doc of selectTipoOfiCie;" [value]="doc['ID']">{{doc['DESCRIPCION']}}</option> 
+								</select> 
+							</div>
 						</div>
-					
 						<div class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
 							<div class="col-md-12 mb-0">
 								<span class="subtitulo">Tipo documento <span *ngIf="this.formGroupDoc.get('idTipoDocumento')?.status==='INVALID'" class="text-danger">(!)</span></span>
@@ -314,7 +313,6 @@
 								</div>							
 							</div>
 						</div>
-
 						
 						<div *ngIf="radioAnexo" class="row" style="margin-left: 0px!important; margin-right: 0px!important;">
 							<div class="col-md-12">
@@ -351,7 +349,7 @@
 
 						<div class="row mx-2 my-5">
 							<button class="btn btn-success" [disabled]="form3.invalid"   type="submit">Enviar </button>
-						</div>
+						</div> 
 
 				</form>
 				

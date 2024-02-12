@@ -56,7 +56,7 @@ export class VideoplayerComponent  {
     if (this.videoElement) {
       if (this.videoElement.nativeElement.volume < 1) {
         this.videoElement.nativeElement.volume += 0.1; // Aumenta el volumen en 0.1 (10%)
-        console.log(this.videoElement.nativeElement.volume)
+        // console.log(this.videoElement.nativeElement.volume)
       }
     }
   }
@@ -65,7 +65,7 @@ export class VideoplayerComponent  {
     if (this.videoElement) {
       if (this.videoElement.nativeElement.volume > 0) {
         this.videoElement.nativeElement.volume -= 0.1; // Disminuye el volumen en 0.1 (10%)
-        console.log(this.videoElement.nativeElement.volume)
+        // console.log(this.videoElement.nativeElement.volume)
       }
     }
   }

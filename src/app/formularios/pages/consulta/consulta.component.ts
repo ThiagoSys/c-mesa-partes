@@ -1,11 +1,9 @@
 import { Component, ElementRef, ViewChild, OnInit, AfterViewInit, HostListener } from '@angular/core';
 import { Form, FormBuilder, FormControl, FormGroup, MaxLengthValidator, Validators } from '@angular/forms';
 
-import { MessageService } from '../../services/message.service';
-//import { ReCaptcha2Component } from 'ngx-captcha';
-//import { ReCaptchaV3Service } from 'ngx-captcha';
 import { SoaptramiteService } from '../../services/soaptramite.service';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 
 declare var bootstrap: any; // Suponiendo que Bootstrap está disponible globalmente
 
@@ -40,7 +38,8 @@ interface propsExpdiente {
 @Component({
   selector: 'app-consulta',
   templateUrl: './consulta.component.html',
-  styleUrls: ['./consulta.component.css']
+  styleUrls: ['./consulta.component.css'],
+  providers: [MessageService]
 })
 export class ConsultaComponent implements OnInit  {
 
@@ -55,8 +54,8 @@ export class ConsultaComponent implements OnInit  {
   public showImg: boolean = true;
 
 
-  public toastMsgExito: string = ''
-  public toastMsgError: string = ''
+  // public toastMsgExito: string = ''
+  // public toastMsgError: string = ''
 
   // Metodos del captcha, revisar los parametros si se borran o se agrega el captcha 
   //@ViewChild('captchaElem') captchaElem!: ReCaptcha2Component;
@@ -222,42 +221,45 @@ export class ConsultaComponent implements OnInit  {
       claveweb:exp.claveWeb,
     }
 
-    const toastError = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasError'));
-    const toasExito = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasExito'));
-
     this.soapTramite.apiConsultarExp(_expdiente).subscribe({
       next:(resp:any)=>{
         if(resp.message==="Datos encontrados"){
           this.listExpediente = resp.data;
           this.loading=false;
-          toasExito.show();
-          this.toastMsgExito = 'Documento encontrado.'
+          // toasExito.show();
+          // this.toastMsgExito = 'Documento encontrado.'
+
+          this.messageService.add({ severity:'success', summary: 'Expediente', detail: `Expediente encontrado.`});
         }
         if(resp.message==="Datos no encontrados"){
           this.loading=false;
           this.listExpediente = [];
-          toastError.show();
-          this.toastMsgError = 'Documento no encontrado, verifique los datos ingresado.'
+          // toastError.show();
+          // this.toastMsgError = 'Documento no encontrado, verifique los datos ingresado.'
+          this.messageService.add({ severity:'error', summary: 'Error', detail: `Expediente no encontrado, verifique los datos ingresado.`});
         }
 
         if(resp.message==="Error api"){
           this.loading=false;
-          this.listExpediente = [];
-          toastError.show();
-          this.toastMsgError = 'Error de respuesta.'
+          // this.listExpediente = [];
+          // toastError.show();
+          // this.toastMsgError = 'Error de respuesta.'
+          this.messageService.add({ severity:'error', summary: 'Error', detail: `Error de respuesta.`});
         }
 
         if(resp.message==="Error servidor"){
           this.loading=false;
           this.listExpediente = [];
-          toastError.show();
-          this.toastMsgError = 'Error.'
+          // toastError.show();
+          // this.toastMsgError = 'Error.'
+          this.messageService.add({ severity:'error', summary: 'Error', detail: `Error.`});
         }
 
     },error:(error) => {
       // this.closeModalLoading();
-      toastError.show();
-      this.toastMsgError = 'Error al cargar los datos'
+      // toastError.show();
+      // this.toastMsgError = 'Error al cargar los datos'
+      this.messageService.add({ severity:'error', summary: 'Error', detail: `Error al cargar los datos.`});
     },complete:()=>{
       // console.log('RESP COMPLETO')  
     }
@@ -302,10 +304,6 @@ export class ConsultaComponent implements OnInit  {
   closeModal(){
     var _modal:HTMLInputElement = (<HTMLInputElement>document.getElementById('myModal'));
     if(_modal!=null){ _modal.style.display = 'none' }
-  }
-
-  btn1(){
-    // console.log(this.formGroupConsul)
   }
 
   backBtn(){

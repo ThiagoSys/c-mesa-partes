@@ -31,6 +31,8 @@
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.5.31",
     "ngx-captcha": "^13.0.0",
+    "primeicons": "^7.0.0",
+    "primeng": "^15.4.1",
     "rxjs": "~7.8.0",
     "soap": "^1.0.0",
     "tslib": "^2.3.0",

@@ -38,8 +38,8 @@ interface  InterfaceDocumento {
   providedIn: 'root'
 })
 export class SoaptramiteService {
-  public baseUrl:string ='https://localhost:5050';
-  //public baseUrl:string ='https://apps.municieneguilla.gob.pe:9096';
+  // public baseUrl:string ='https://localhost:3050';
+  public baseUrl:string ='https://apps.municieneguilla.gob.pe:9096';
 
   constructor(private http: HttpClient) { }
 
@@ -130,7 +130,7 @@ export class SoaptramiteService {
   // TODO GUARDAR LOS DOCUMENTOS Y ANEXOS EN FORMATO PDF
   saveOnePdf(body:FormData):Observable<any>{
     const url = `${this.baseUrl}/api/savepdf`;
-    return this.http.post<any>(url, body )
+    return this.http.post<any>(url, body)
   }
   // TODO CREAR UN PDF DE EXPEDIENTE
   generateOnePdf(body:FormData){

@@ -1,4 +1,6 @@
 
+<p-toast position="bottom-right"></p-toast>
+
 <div *ngIf="loading" class="position-absolute z-3 justify-content-center align-items-center"  [style.width.px]="getWidth" [style.height.px]="getHeight" style="--bs-bg-opacity: .2; background-color: rgba(var(--bs-dark-rgb), var(--bs-bg-opacity)) !important;">
 	<div class="d-flex justify-content-center align-items-center" style="width: 100%; height: 100%;">
 		<div class="d-block justify-content-center align-items-center">
@@ -9,7 +11,9 @@
 	</div>
 </div>
 
-	<div class="toast-container position-fixed bottom-0 end-0 p-3">
+
+
+	<!-- <div class="toast-container position-fixed bottom-0 end-0 p-3">
 		<div id="toasError" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
 		<div class="toast-header bg-danger">
 			<strong class="me-auto text-white">Error</strong>
@@ -27,7 +31,7 @@
 		</div>
 		<div class="toast-body bg-success text-white">{{toastMsgExito}}</div>
 		</div>
-	</div>
+	</div> -->
 
 <div>
 

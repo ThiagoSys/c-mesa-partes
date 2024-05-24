@@ -22,6 +22,11 @@ import { VideoplayerComponent} from './pages/videoplayer/videoplayer.component'
 
 import { NgxCaptchaModule } from 'ngx-captcha';
 
+import { PrimeNgModule } from '../prime-ng/prime-ng.module';
+// import {MessageService} from 'primeng/api';
+
+// import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+// import { BrowserModule } from '@angular/platform-browser';
 
 
 @NgModule({
@@ -38,19 +43,19 @@ import { NgxCaptchaModule } from 'ngx-captcha';
     FormsModule,
     FormulariosRoutingModule,
     ReactiveFormsModule,
-    //MatInputModule,
-
     // Material Angular
     MatTooltipModule,
     MatButtonModule,
     MatStepperModule,
 
     // RecaptchaModule,
-    NgxCaptchaModule
+    NgxCaptchaModule,
+
+    // PRIMENG
+    PrimeNgModule,
   ],
-  // providers :[{
-  //   provide:RECAPTCHA_SETTINGS,
-  //   useValue:{ siteKey: 'TU_CLAVE_DEL_SITIO' } as RecaptchaSettings,
-  // }]
+  providers :[
+    // MessageService,
+  ]
 })
 export class FormulariosModule { }

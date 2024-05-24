@@ -2,8 +2,6 @@ import { AfterViewInit, Component, ElementRef, HostListener, Inject, OnInit, Vie
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 // import { SearchPersonaService } from '../../services/search-persona.service';
 
-// import { faCoffee } from '@fortawesome/free-solid-svg-icons';
-// import { faStar as farStar } from '@fortawesome/free-regular-svg-icons';
 import { faStar as fasStar } from '@fortawesome/free-solid-svg-icons';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -12,20 +10,16 @@ import { Router } from '@angular/router';
 
 import { DOCUMENT } from '@angular/common';
 import { SoaptramiteService } from '../../services/soaptramite.service';
-import { MessageService } from '../../services/message.service';
-
-// import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
-//import {MatDialog} from '@angular/material/dialog';
 
 // import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import { StepperOrientation } from '@angular/cdk/stepper';
 
-import {Observable} from 'rxjs';
+import {Observable, lastValueFrom} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {BreakpointObserver} from '@angular/cdk/layout';
+import { MessageService } from 'primeng/api';
 
 declare var bootstrap: any;
 
@@ -37,7 +31,8 @@ declare var $: any;
 @Component({
   selector: 'app-expediente',
   templateUrl: './expediente.component.html',
-  styleUrls: ['./expediente.component.css']
+  styleUrls: ['./expediente.component.css'],
+  providers: [MessageService]
 })
 export class ExpedienteComponent implements OnInit, AfterViewInit {
 
@@ -93,10 +88,10 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
 
 
   // Carga el loading
-  public toastMsgError: string = '';
-  public toastMsgOk: string = '';
+  // public toastMsgError: string = '';
+  // public toastMsgOk: string = '';
   public loading: boolean = false;
-  public showFormDocumento: boolean = false;
+  public showFormDocumento: boolean = false;  // show form add documento - inicia en FALSE
   public getWidth:any;
   public getHeight:any;
 
@@ -221,19 +216,17 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
     private soapTramite: SoaptramiteService,
     library: FaIconLibrary,
 
-
-    //public _MessageService: MessageService, 
-    private sanitizer: DomSanitizer,
-     @Inject(DOCUMENT)
+    // private sanitizer: DomSanitizer,
+     @Inject(DOCUMENT) private document: Document, // Error con Toast Primeng
     // private document: any, 
 
     private messageService: MessageService,
     //public dialog: MatDialog
     // private modalService: NgbModal
 
-    private _formBuilder: FormBuilder, 
-    breakpointObserver: BreakpointObserver
-    
+    // private _formBuilder: FormBuilder, 
+    breakpointObserver: BreakpointObserver,
+
   ){
 
     this.stepperOrientation = breakpointObserver.observe('(min-width: 800px)').pipe(map(({matches}) => (matches ? 'horizontal' : 'vertical')));
@@ -356,13 +349,10 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
 
     // this.openModal();
   }
+
   ngAfterViewInit(): void { 
     $('[data-bs-toggle="tooltip"]').tooltip();
-
-    //console.log('DETECTER')
   }
-
-
 
   phoneNumberValidator(control: FormControl): { [key: string]: boolean | string } | null {
     const value = control.value;
@@ -753,34 +743,38 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
     var _distritos:HTMLInputElement = (<HTMLInputElement>document.getElementById('distrito'));
     var _domicilioFiscal:HTMLInputElement = (<HTMLInputElement>document.getElementById('domicilioFiscal'));
 
-    const toastError = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasError'));
-    const toastExito = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasExito'));
+    // const toastError = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasError'));
+    // const toastExito = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasExito'));
 
 
     this.soapTramite.getDatosEmpresaSunatXml({documento}).subscribe({
       next:(resp)=>{
         if(resp.message==='Documento no valido'){
           this.closeModalLoading();
-          toastError.show();
-          this.toastMsgError = 'Documento ingresado no valido'
+          // toastError.show();
+          // this.toastMsgError = 'Documento ingresado no valido'
+          this.messageService.add({ severity:'error', summary: 'Verificado', detail: 'Documento ingresado no valido.'});
         }
 
         if(resp.message==='Error api'){
           this.closeModalLoading();
-          toastError.show();
-          this.toastMsgError = 'Error de respuesta'
+          // toastError.show();
+          // this.toastMsgError = 'Error de respuesta'
+          this.messageService.add({ severity:'error', summary: 'Verificado', detail: 'Error de respuesta.'});
         }
 
         if(resp.message==='Error de formato'){
           this.closeModalLoading()
-          toastError.show();
-          this.toastMsgError = 'Error de formato'
+          // toastError.show();
+          // this.toastMsgError = 'Error de formato'
+          this.messageService.add({ severity:'error', summary: 'Verificado', detail: 'Error de formato.'});
         }
 
         if(resp.message==='Error servidor'){
           this.closeModalLoading()
-          toastError.show();
-          this.toastMsgError = 'Error'
+          // toastError.show();
+          // this.toastMsgError = 'Error'
+          this.messageService.add({ severity:'error', summary: 'Verificado', detail: 'Error servidor.'});
         }
 
         if(resp.message==='Datos encontrados'){
@@ -808,8 +802,9 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
             tipoContribuyente: resp.data.DescPersona,
           })
 
-          toastExito.show();
-          this.toastMsgOk = 'Documento entontrado.'
+          // toastExito.show();
+          // this.toastMsgOk = 'Documento entontrado.'
+          this.messageService.add({ severity:'success', summary: 'Verificado', detail: 'Documento encontrado.'});
         }
 
         if(resp.message==='Datos no encontrados'){
@@ -818,13 +813,15 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
           tipo_pe.disabled = false;
           tipo_do.disabled = false;
           nro_doc.disabled = false;
-          toastError.show();
-          this.toastMsgError = 'Documento no encontrado, puede ingresar sus datos manualmente.'
+          // toastError.show();
+          // this.toastMsgError = 'Documento no encontrado, puede ingresar sus datos manualmente.'
+          this.messageService.add({ severity:'error', summary: 'Verificado', detail: 'Documento no encontrado, puede ingresar sus datos manualmente.'});
         }
       },error:(error) => {
         this.closeModalLoading();
-        toastError.show();
-        this.toastMsgError = 'Error al cargar los datos'
+        // toastError.show();
+        // this.toastMsgError = 'Error al cargar los datos'
+        this.messageService.add({ severity:'error', summary: 'Error', detail: 'Error al cargar los datos.'});
       },complete:()=>{
         // console.log('RESP COMPLETO')  
       }
@@ -841,37 +838,42 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
     var _nombres:HTMLInputElement = (<HTMLInputElement>document.getElementById('nombres'));
     var _direccion:HTMLInputElement = (<HTMLInputElement>document.getElementById('direccion'));
 
-    const toastError = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasError'));
-    const toastExito = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasExito'));
+    // const toastError = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasError'));
+    // const toastExito = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasExito'));
 
     this.soapTramite.getDatosPersonaReniecXml({documento}).subscribe({
       next:(resp)=>{
       if(resp.message==='Documento no valido'){
         this.imagenFoto='';
         this.closeModalLoading();
-        toastError.show();
-        this.toastMsgError = 'Documento ingresado no valido'
+        // toastError.show();
+        // this.toastMsgError = 'Documento ingresado no valido'
+        this.messageService.add({ severity:'error', summary: 'Verificado', detail: 'Documento ingresado no valido.'});
       }
 
       if(resp.message==='Error api'){
         this.imagenFoto='';
         this.closeModalLoading()
-        toastError.show();
-        this.toastMsgError = 'Error de respuesta'
+        // toastError.show();
+        // this.toastMsgError = 'Error de respuesta'
+        this.messageService.add({ severity:'error', summary: 'Verificado', detail: 'Error de respuesta.'});
       }
 
       if(resp.message==='Error de formato'){
         this.imagenFoto='';
         this.closeModalLoading()
-        toastError.show();
-        this.toastMsgError = 'Error de formato'
+        // toastError.show();
+        // this.toastMsgError = 'Error de formato'
+        this.messageService.add({ severity:'error', summary: 'Verificado', detail: 'Error de formato.'});
       }
 
       if(resp.message==='Error servidor'){
         this.imagenFoto='';
         this.closeModalLoading()
-        toastError.show();
-        this.toastMsgError = 'Error'
+        // toastError.show();
+        // this.toastMsgError = 'Error'
+        this.messageService.add({ severity:'error', summary: 'Verificado', detail: 'Error servidor.'});
+        
       }
 
       if(resp.message==='Datos encontrados'){
@@ -900,8 +902,10 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
           this.imagenFoto = `data:image/jpeg;base64,${resp.data.FotoPer}`
           const image = new Image();
           image.src = this.imagenFoto;
-          toastExito.show();
-          this.toastMsgOk = 'Documento encontrado.'
+          // toastExito.show();
+          // this.toastMsgOk = 'Documento encontrado.'
+
+          this.messageService.add({ severity:'success', summary: 'Verificado', detail: 'Documento encontrado.'});
       }
 
       if(resp.message==='Datos no encontrados'){
@@ -912,13 +916,15 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
         tipo_do.disabled = true;
         nro_doc.disabled = true;
 
-        toastError.show();
-        this.toastMsgError = 'Documento no encontrado, puede ingresar sus datos manualmente.'
+        // toastError.show();
+        // this.toastMsgError = 'Documento no encontrado, puede ingresar sus datos manualmente.'
+        this.messageService.add({ severity:'error', summary: 'Error', detail: 'Documento no encontrado, puede ingresar sus datos manualmente.'});
       }
     },error:(error) => {
       this.closeModalLoading();
-      toastError.show();
-      this.toastMsgError = 'Error al cargar los datos'
+      // toastError.show();
+      // this.toastMsgError = 'Error al cargar los datos'
+      this.messageService.add({ severity:'error', summary: 'Error', detail: 'Error al cargar los datos.'});
     },complete:()=>{
       // console.log('RESP COMPLETO')  
     }})
@@ -932,8 +938,8 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
     var tipo_do:HTMLInputElement = (<HTMLInputElement>document.getElementById('tipoDocumentoP'));
     var nro_doc:HTMLInputElement = (<HTMLInputElement>document.getElementById('nroDocumento'));
 
-    const toastError = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasError'));
-    const toastExito = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasExito'));
+    // const toastError = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasError'));
+    // const toastExito = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasExito'));
 
     const tipoDoc_Val: string = tipo_do.value;
     const nroDoc_Val: string = nro_doc.value;
@@ -947,16 +953,19 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
         if(tipoDoc_Val==='RUC'){ return this.empresa(documento, form)}
       }
       if(documento.length!==8||documento.length!==11){
-        this.closeModalLoading()
-        toastError.show();
-        this.toastMsgError = 'El documento no es valido'
+        // this.closeModalLoading()
+        // toastError.show();
+        // this.toastMsgError = 'El documento no es valido'
+        this.messageService.add({ severity:'error', summary: 'Error', detail: 'El documento no es valido.'});
+        
      }
     }
     if(documento==null){
       if(documento==null){
         this.closeModalLoading()
-        toastError.show();
-        this.toastMsgError = 'El documento no debe estar vacio'
+        // toastError.show();
+        // this.toastMsgError = 'El documento no debe estar vacio'
+        this.messageService.add({ severity:'error', summary: 'Error', detail: 'El documento no debe estar vacio.'});
       }
     }
   }
@@ -1017,28 +1026,33 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
         }
         if(resp.message === "Error api"){
           this.closeModalLoading()
-          toastError.show();
-          this.toastMsgError = 'Error de respuesta'
+          // toastError.show();
+          // this.toastMsgError = 'Error de respuesta'
+          this.messageService.add({ severity:'error', summary: 'Error', detail: 'Error de respuesta.'});
+          // console.log("ERRRORR API", resp)
           //this.showFormDocumento = true;
         }
 
         if(resp.message === "Error servidor"){
           this.closeModalLoading()
-          toastError.show();
-          this.toastMsgError = 'Error'
+          // toastError.show();
+          // this.toastMsgError = 'Error'
+          this.messageService.add({ severity:'error', summary: 'Error', detail: 'Error.'});
         }
 
         if(resp.message === "Error de formato"){
           this.closeModalLoading()
-          toastError.show();
-          this.toastMsgError = 'Error de formato'
+          // toastError.show();
+          // this.toastMsgError = 'Error de formato'
+          this.messageService.add({ severity:'error', summary: 'Error', detail: 'Error de formato.'});
         }
 
 
     },error:(error) => {
       this.closeModalLoading();
-      toastError.show();
-      this.toastMsgError = 'Error al cargar los datos'
+      // toastError.show();
+      // this.toastMsgError = 'Error al cargar los datos'
+      this.messageService.add({ severity:'error', summary: 'Error', detail: 'Error al cargar los datos.'});
     },complete:()=>{
       // console.log('RESP COMPLETO')  
     }
@@ -1058,8 +1072,8 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
 
     var _contentScroll:HTMLInputElement = (<HTMLInputElement>document.getElementById('content'));
 
-    const toastError = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasError'));
-    const toastExito = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasExito'));
+    // const toastError = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasError'));
+    // const toastExito = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasExito'));
 
     const persona = {
       paterno: '',
@@ -1108,26 +1122,30 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
 
         if(resp.message === "Error api"){
           this.closeModalLoading()
-          toastError.show();
-          this.toastMsgError = 'Error de respuesta'
+          // toastError.show();
+          // this.toastMsgError = 'Error de respuesta'
+          this.messageService.add({ severity:'error', summary: 'Error', detail: 'Error de respuesta.'});
         }
 
         if(resp.message === "Error servidor"){
           this.closeModalLoading()
-          toastError.show();
-          this.toastMsgError = 'Error'
+          // toastError.show();
+          // this.toastMsgError = 'Error'
+          this.messageService.add({ severity:'error', summary: 'Error', detail: 'Error.'});
         }
 
         if(resp.message === "Error de formato"){
           this.closeModalLoading()
-          toastError.show();
-          this.toastMsgError = 'Error de formato'
+          // toastError.show();
+          // this.toastMsgError = 'Error de formato'
+          this.messageService.add({ severity:'error', summary: 'Error', detail: 'Error de formato.'});
         }
 
       },error:(error) => {
         this.closeModalLoading();
-        toastError.show();
-        this.toastMsgError = 'Error al cargar los datos'
+        // toastError.show();
+        // this.toastMsgError = 'Error al cargar los datos'
+        this.messageService.add({ severity:'error', summary: 'Error', detail: 'Error al cargar los datos.'});
       },complete:()=>{
         // console.log('RESP COMPLETO')  
       }
@@ -1208,7 +1226,7 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
 
   // TODO AQUI PARA PARA AGREGAR LOS ARCHIVOS PDF
   onFileAnexoChange(e:any){
-    const toastError = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasError'));
+    // const toastError = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasError'));
 
     this.uploadedAnexoFiles = '';
     this.fileTmpAnexoSeleccion = [];
@@ -1235,20 +1253,22 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
             this.fileTmpAnexoSeleccion.push(_file)
             _countFile += 1 
           }else{
-            toastError.show();
-            if(countFile.length===1){ this.toastMsgError = `El tamaño del pdf no debe ser mayor a 10Mb` }
-            if(countFile.length===2){ this.toastMsgError = `El tamaño del pdf no debe ser mayor a 10Mb` }
-            if(countFile.length===3){ this.toastMsgError = `El tamaño del pdf no debe ser mayor a 10Mb` }
+            // toastError.show();
+            if(countFile.length===1){ this.messageService.add({ severity:'warn', summary: 'Detalle', detail: 'El tamaño del pdf no debe ser mayor a 10Mb.'}); }
+            if(countFile.length===2){ this.messageService.add({ severity:'warn', summary: 'Detalle', detail: 'El tamaño del pdf no debe ser mayor a 10Mb.'}); }
+            if(countFile.length===3){ this.messageService.add({ severity:'warn', summary: 'Detalle', detail: 'El tamaño del pdf no debe ser mayor a 10Mb.'}); }
           }
         }else{
-          toastError.show();
-          this.toastMsgError = `Solo archivos PDF`;
+          // toastError.show();
+          // this.toastMsgError = `Solo archivos PDF`;
+          this.messageService.add({ severity:'warn', summary: 'Detalle', detail: 'Solo archivos PDF.'});
         }
       }
       this.uploadedAnexoFiles = (_countFile==0)?"":(_countFile==1?`Archivo ${_countFile}`:`Archivos ${_countFile}`);
     } else {
-      toastError.show();
-      this.toastMsgError = `Solo se permite cargar 3 anexos `
+      // toastError.show();
+      // this.toastMsgError = `Solo se permite cargar 3 anexos `
+        this.messageService.add({ severity:'warn', summary: 'Detalle', detail: 'Solo se permite cargar 3 anexos.'});
     }
 
     this.formGroupDoc.patchValue({'fileAnexo':this.fileTmpAnexo})
@@ -1258,8 +1278,8 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
 
   onFileDocChange(e:any){
 
-    const toastError = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasError'));
-    const toastExito = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasExito'));
+    // const toastError = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasError'));
+    // const toastExito = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasExito'));
 
     this.uploadedDocumentoFiles = '';
     this.fileTmpDocSeleccion = [];
@@ -1288,12 +1308,15 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
             this.fileTmpDocSeleccion.push(_file);
             _countFile += 1;
           } else{
-            toastError.show();
-            this.toastMsgError = 'El tamaño del pdf no debe ser mayor a 10Mb'
+            // toastError.show();
+            // this.toastMsgError = 'El tamaño del pdf no debe ser mayor a 10Mb'
+            this.messageService.add({ severity:'warn', summary: 'Detalle', detail: 'El tamaño del pdf no debe ser mayor a 10Mb.'});
           }
         }else{
-          toastError.show();
-          this.toastMsgError = `Solo archivos PDF`;
+          // toastError.show();
+          // this.toastMsgError = `Solo archivos PDF`;
+          this.messageService.add({ severity:'warn', summary: 'Detalle', detail: 'Solo archivos PDF.'});
+
         }
       }
       this.uploadedDocumentoFiles = (_countFile==0)?"":(_countFile==1?`Archivo ${_countFile}`:`Archivos ${_countFile}`);
@@ -1338,9 +1361,10 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
 
   // TODO AQUI PARA REGISTRAR UN DOCUMENTO A LA BASE DE DATOS
   enviar(formdoc:any){
-    const toastError = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasError'));
-    const toastExito = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasExito'));
+    // const toastError = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasError'));
+    // const toastExito = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasExito'));
     this.openModalLoading()
+
     const _doc = {
       asunto: formdoc.asunto,
       claveWeb: formdoc.claveWeb,
@@ -1368,44 +1392,86 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
       tipo: formdoc.tipo,
       usuCreacion: formdoc.usuCreacion,
     }
+
+    // const _doc = {
+    //   asunto: "DATOS OK",
+    //   claveWeb: "122121",
+    //   documentoAdjunto: "ADJUNTO100",
+    //   fecCreacion: "2023-08-01",
+    //   fecDocumento: "2023-08-01",
+    //   flgAnexo: "0",
+    //   flgTupa: "0",
+    //   folios: "2",
+    //   idAno: "2024",
+    //   idDestino: "9.31",
+    //   idDocumento: "0",
+    //   idDocumentoPadre: "0",
+    //   idNroDocumento: "32432345",
+    //   idRemitenteE: "3108",
+    //   idTipoDocumento: "25",
+    //   idTupa: "0",
+    //   nombreRemitente: "PRESEN DEL SOLAR",
+    //   nroDocumentoDoc: "CONSTANCIA DE NO ADEUDO",
+    //   numDocumentoPadre: "0",
+    //   observaciones: "MESA",
+    //   plazo: "0",
+    //   remitente: "0",
+    //   reservado: "1",
+    //   tipo: "E",
+    //   usuCreacion: "VIRTUAL",
+    // }
+
     // console.log(_doc.nombreRemitente)
     // console.log(formdoc.nombreRemitente)
-    // console.log(_doc)
+    // console.log('DOCUMENTO ',_doc)
     this.soapTramite.getDatosDocumentosXml(_doc).subscribe({
       next:(resp:any)=>{
-        // console.log('MY',resp)
+        // console.log('MY  0000000',resp)
         if(resp.ok&&resp.message==='Documento ingresado'){
-          // console.log('AQUIII',resp.data)
+          console.log('AQUIII 1111',resp.data)
+          // debugger
           this.enviarPdfDoc(resp.data)
+          // debugger
           this.enviarPdfAnexo(resp.data)
+          // debugger
           this.obtenerDataDocumento(resp.data)
+          // debugger
         }
 
         if(resp.message === "Error api"){
-          // console.log('AQUIII ERROR')
+          // console.log('AQUIII 2222222', resp)
           this.closeModalLoading()
-          toastError.show();
-          this.toastMsgError = 'Error de respuesta'
+          // toastError.show();
+          // this.toastMsgError = 'Error de respuesta'
+          this.messageService.add({ severity:'error', summary: 'Error', detail: 'Error de respuesta.'});
         }
 
         if(resp.message === "Error servidor"){
+          // console.log('AQUIII 333333', resp)
+
           this.closeModalLoading()
-          toastError.show();
-          this.toastMsgError = 'Error'
+          // toastError.show();
+          // this.toastMsgError = 'Error'
+          this.messageService.add({ severity:'error', summary: 'Error', detail: 'Error.'});
         }
 
         if(resp.message === "Error de formato"){
+          // console.log('AQUIII 444444', resp)
+
           this.closeModalLoading()
-          toastError.show();
-          this.toastMsgError = 'Error de formato'
+          // toastError.show();
+          // this.toastMsgError = 'Error de formato'
+          this.messageService.add({ severity:'error', summary: 'Error', detail: 'Error de formato.'});
         }
 
       },error:(error) => {
         this.closeModalLoading();
-        toastError.show();
-        this.toastMsgError = 'Error al cargar los datos'
+        // toastError.show();
+        // this.toastMsgError = 'Error al cargar los datos'
+        this.messageService.add({ severity:'error', summary: 'Error', detail: 'Error al cargar los datos.'});
+        // console.log('AQUIII 5555555', error)
       },complete:()=>{
-        // console.log('RESP COMPLETO')  
+        console.log('RESP COMPLETO')  
       }
     })
   }
@@ -1423,8 +1489,8 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
  // TODO AQUI PARA OBTENER LOS DATOS DEL DOCUMENTO REGISTRADO
   obtenerDataDocumento(idDoc:string){
     const _data = { idDoc: idDoc };
-    const toastError = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasError'));
-    const toastExito = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasExito'));
+    // const toastError = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasError'));
+    // const toastExito = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasExito'));
 
     this.soapTramite.getDocumentoIngresadoXml(_data).subscribe({
       next:(response:any)=>{
@@ -1456,32 +1522,37 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
 
         if(response.message === "Datos no encontrados"){
           this.closeModalLoading()
-          toastError.show();
-          this.toastMsgError = response.message
+          // toastError.show();
+          // this.toastMsgError = response.message
+          this.messageService.add({ severity:'error', summary: 'Error', detail: 'Datos no encontrados.'});
         }
         
         if(response.message === "Error api"){
           this.closeModalLoading()
-          toastError.show();
-          this.toastMsgError = 'Error de respuesta'
+          // toastError.show();
+          // this.toastMsgError = 'Error de respuesta'
+          this.messageService.add({ severity:'error', summary: 'Error', detail: 'Error de respuesta.'});
         }
 
         if(response.message === "Error servidor"){
           this.closeModalLoading()
-          toastError.show();
-          this.toastMsgError = 'Error'
+          // toastError.show();
+          // this.toastMsgError = 'Error'
+          this.messageService.add({ severity:'error', summary: 'Error', detail: 'Error.'});
         }
 
         if(response.message === "Error de formato"){
           this.closeModalLoading()
-          toastError.show();
-          this.toastMsgError = 'Error de formato'
+          // toastError.show();
+          // this.toastMsgError = 'Error de formato'
+          this.messageService.add({ severity:'error', summary: 'Error', detail: 'Error de formato.'});
         }
 
       },error:(error) => {
         this.closeModalLoading();
-        toastError.show();
-        this.toastMsgError = 'Error al cargar los datos'
+        // toastError.show();
+        // this.toastMsgError = 'Error al cargar los datos'
+        this.messageService.add({ severity:'error', summary: 'Error', detail: 'Error al cargar los datos.'});
       },complete:()=>{
         // console.log('RESP COMPLETO')  
       }
@@ -1491,42 +1562,51 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
   // TODO AQUI PARA GUARDAR LOS PDF SELECCIONADO DEL DIRECTORIO O ESCRITORIO DEL USUARIO 
 
   async enviarPdfDoc(claveDoc:string){
-    // console.log('CLAVE',claveDoc)
     if(this.fileTmpDoc.length!==0){
-      // console.log('CLAVE',claveDoc, this.fileTmpDoc)
       for (let i = 0; i < this.fileTmpDoc.length; i++) {
-        var formularioDeDatos = new FormData();
-        formularioDeDatos.append("myfile", this.fileTmpDoc[i].fileRaw, this.fileTmpDoc[i].fileName);
-        formularioDeDatos.append('nroDocumento', this.formGroupSearch.value.nroDocumento);
-        formularioDeDatos.append('archivo', 'Documento');
-        formularioDeDatos.append('orden', (i+1).toString());
-        formularioDeDatos.append('claveDoc', claveDoc);
-        this.soapTramite.saveOnePdf(formularioDeDatos).subscribe((resp:any)=>{
-          // console.log('PDF DOC', resp)
-        })
+        try {
+          var formularioDeDatos = new FormData();
+          formularioDeDatos.append("myfile", this.fileTmpDoc[i].fileRaw, this.fileTmpDoc[i].fileName);
+          formularioDeDatos.append('nroDocumento', this.formGroupSearch.value.nroDocumento);
+          formularioDeDatos.append('archivo', 'Documento');
+          formularioDeDatos.append('orden', (i+1).toString());
+          formularioDeDatos.append('claveDoc', claveDoc);
+          const response = await lastValueFrom(this.soapTramite.saveOnePdf(formularioDeDatos))
+
+          if(response.message=='pdf guardado') {
+            this.messageService.add({ severity:'info', summary: 'Documento', detail: `Documento ${i+1} subido con exito.`});
+          }
+        } catch (error) {
+          console.error('Error al enviar archivo:', error);
+        }
       }
     }
   }
 
   async enviarPdfAnexo(claveDoc:string){
-    // console.log('CLAVE',claveDoc, this.fileTmpAnexo)
     if(this.fileTmpAnexo.length!==0){
-
       for (let i = 0; i < this.fileTmpAnexo.length; i++) {
-        var formularioDeDatos = new FormData();
-        formularioDeDatos.append("myfile", this.fileTmpAnexo[i].fileRaw, this.fileTmpAnexo[i].fileName);
-        formularioDeDatos.append('nroDocumento', this.formGroupSearch.value.nroDocumento);
-        formularioDeDatos.append('archivo', 'Anexo');
-        formularioDeDatos.append('orden', (i+1).toString());
-        formularioDeDatos.append('claveDoc', claveDoc);
-        this.soapTramite.saveOnePdf(formularioDeDatos).subscribe((resp:any)=>{
-          // console.log('PDF ANEXO', resp)
-        })
-      }      
+        try {
+          var formularioDeDatos = new FormData();
+          formularioDeDatos.append("myfile", this.fileTmpAnexo[i].fileRaw, this.fileTmpAnexo[i].fileName);
+          formularioDeDatos.append('nroDocumento', this.formGroupSearch.value.nroDocumento);
+          formularioDeDatos.append('archivo', 'Anexo');
+          formularioDeDatos.append('orden', (i+1).toString());
+          formularioDeDatos.append('claveDoc', claveDoc);
+          const response  = await lastValueFrom(this.soapTramite.saveOnePdf(formularioDeDatos))
+          // console.log('Anexo pdf agregado', response.message);
+
+          if(response.message=='pdf guardado') {
+            this.messageService.add({ severity:'info', summary: 'Anexo', detail: `Anexo ${i+1} subido con exito.`});
+          }
+        } catch (error) {
+          console.error('Error al enviar archivo:', error);
+        }
+      }
     }
   }
 
-  // TODO AQUI PARA CREAR Y GUARDAR EL PDF DEL EXPEDIENTE SOLICITADO
+  // TODO AQUI PARA CREAR Y GUARDAR EL PDF DEL EXPEDIENTE SOLICITADO Y ENVIAR AL CORREO
   async generarFileJspdf(claveDoc:string, nroDoc:string, expediente:any){
     const doc = new jsPDF({
       orientation:'portrait',
@@ -1606,6 +1686,7 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
           documento:expediente.documento,
           file:resp.data,
         }
+        this.messageService.add({ severity:'success', summary: 'Expediente', detail: `Expediente registrado con exito.`});
             // console.log('OK EMAIL')
 
         this.soapTramite.enviarCorreo(_data).subscribe((resp:any)=>{ 
@@ -1614,18 +1695,20 @@ export class ExpedienteComponent implements OnInit, AfterViewInit {
 
             this.closeModalLoading()
             //const toastError = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasError'));
-            const toastExito = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasExito'));
-            toastExito.show();
-            this.toastMsgOk='Expediente registrado con exito.'
+            // const toastExito = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasExito'));
+            // toastExito.show();
+            // this.toastMsgOk='Expediente registrado con exito.'
+            this.messageService.add({ severity:'success', summary: 'Correo', detail: `Expediente enviado a su correo.`});
             //this.loading = false;
             this.openModal();
           }else{
             if(resp.message='Error correo'){
               //this.loading = false;
               this.closeModalLoading()
-              const toastError = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasError'));
-              toastError.show();
-              this.toastMsgError='No se envio el mensaje a su correo.'
+              // const toastError = new bootstrap.Toast(<HTMLInputElement>document.getElementById('toasError'));
+              // toastError.show();
+              // this.toastMsgError='No se envio el mensaje a su correo.'
+              this.messageService.add({ severity:'error', summary: 'Correo', detail: `No se envio el expediente a su correo.`});
             }
           }
         })
